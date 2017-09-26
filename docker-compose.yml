@@ -1,0 +1,71 @@
+version: '2'
+services:
+  app:
+    image: openjdk:8-jdk-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ./mvnw -Plocal spring-boot:run
+    links: 
+      - mysql
+    networks:
+      spring-docker: 
+        ipv4_address: 10.5.0.3
+  mysql-data:
+    image: busybox
+    volumes:
+      - /var/lib/mysql
+    container_name: mysql-datastore
+  mysql:
+    image: mysql:5.7
+    environment:
+       MYSQL_ROOT_PASSWORD: password
+       MYSQL_DATABASE: docker_spring
+       MYSQL_USER: docker
+       MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    container_name: mysql-db
+    volumes_from:
+      - mysql-data
+    networks:
+      spring-docker: 
+        ipv4_address: 10.5.0.2
+networks:
+  spring-docker:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+#  app:
+#    image: openjdk:8-jdk-alpine
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - .:/app
+#    working_dir: /app
+#    command: ./mvnw spring-boot:run
+#    depends_on: 
+#      - postgresql
+#  postgres-data:
+#    image: busybox
+#    volumes:
+#      - /var/lib/postgresql/data
+#    container_name: postgres-datastore
+#  postgresql:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: docker
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: docker_spring
+#    ports:
+#      - "5432:5432"
+#    container_name: postgres-db
+#    volumes_from:
+#      - postgres-data
