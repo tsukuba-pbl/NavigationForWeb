@@ -11,7 +11,7 @@ services:
     links: 
       - mysql
     networks:
-      spring-docker: 
+      navigation-for-web: 
         ipv4_address: 10.5.0.3
   mysql-data:
     image: busybox
@@ -33,10 +33,10 @@ services:
     volumes_from:
       - mysql-data
     networks:
-      spring-docker: 
+      navigation-for-web: 
         ipv4_address: 10.5.0.2
 networks:
-  spring-docker:
+  navigation-for-web:
     driver: bridge
     ipam:
       driver: default
