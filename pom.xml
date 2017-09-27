@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>spring-docker</artifactId>
+	<artifactId>web</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>docker</name>
+	<name>NavigationForWeb</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -69,7 +69,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 	    <dependency>
 			<groupId>org.flywaydb</groupId>
 		    <artifactId>flyway-core</artifactId>
@@ -96,6 +99,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        
+        <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-maven-plugin</artifactId>
+	        <version>1.5.6.RELEASE</version>
         </dependency>
         
 	</dependencies>
