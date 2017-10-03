@@ -1,11 +1,31 @@
 version: '2'
 services:
-  app:
+  nginx:
+    image: nginx:1.13.5
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+    links:
+      - frontend
+  frontend: 
+    image: node:6.11.3
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: bash -c "npm install -g @angular/cli@1.4.3 && npm run build"
+    networks:
+      navigation-for-web:
+        ipv4_address: 10.5.0.4
+  backend:
     image: openjdk:8-jdk-alpine
     ports:
       - "8080:8080"
     volumes:
-      - .:/app
+      - ./backend:/app
     working_dir: /app
     command: ./mvnw -Plocal spring-boot:run
     links: 
