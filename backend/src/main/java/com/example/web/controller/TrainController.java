@@ -18,10 +18,14 @@ public class TrainController {
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
-	public Map<String, Integer> index(Model model) {
+	public Map<String, Integer> index() {
 		Map<String, Integer> map = new HashMap<>();
 		map.put("ume", 25);
 		map.put("turu", 23);
 		return map;
+	}
+	
+	public int sum(int a, int b) {
+		return a+b;
 	}
 }
