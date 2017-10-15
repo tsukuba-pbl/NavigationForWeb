@@ -5,6 +5,7 @@ matrix:
         - "7"
       before_script:
         - cd frontend
+        - yarn install
       cache:
         yarn: true
       script:
