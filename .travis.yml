@@ -1,0 +1,19 @@
+matrix:
+  include:
+    - language: node_js
+      node_js: 
+        - "7"
+      before_script:
+        - cd frontend
+        - yarn install
+      cache:
+        yarn: true
+      script:
+        - npm test
+
+    - language: groovy
+      jdk: oraclejdk8
+      before_script:
+        - cd backend
+      script:
+        - ./mvnw test
