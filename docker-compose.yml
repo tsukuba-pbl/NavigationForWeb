@@ -19,7 +19,7 @@ services:
     volumes:
       - ./frontend:/app
     working_dir: /app
-    command: bash -c "npm install -g @angular/cli@1.4.3 && npm run build"
+    command: bash -c "npm install -g @angular/cli@1.4.3 && yarn install && npm run build"
     networks:
       navigation-for-web:
         ipv4_address: 10.5.0.4
