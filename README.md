@@ -1,5 +1,8 @@
-# Spring Boot with Docker
-## how to use
+[![Build Status](https://travis-ci.org/tsukuba-pbl/NavigationForWeb.svg?branch=master)](https://travis-ci.org/tsukuba-pbl/NavigationForWeb)
+
+# NavigationForWeb
+
+# how to use
 local環境で動かす場合
 
 ```
@@ -14,13 +17,13 @@ sh ./serve.sh -e prod
 
 それぞれ中では`docker-compose up`をしている．コマンド実行時には自動的にマイグレーションが実行されている．
 
-実行後， `http://127.0.0.1:8080` or `http://localhost:8080` にアクセスすることでブラウザで確認できる．
+実行後， `http://127.0.0.1` or `http://localhost` にアクセスすることでブラウザで確認できる．
 
+# 各種説明
+## DBへの接続
 mysqlには `mysql -h127.0.0.1 -u docker -p` でパスワードが `password`で接続できる．ユーザ名とパスワードとDB名は，`docker-compose.yml`を参考にしていただきたい．
 
-現在は127.0.0.1から対象のmysqlのコンテナにアクセスできるが，mysqlのコンテナが複数になる場合，mysqlの固定したipを外からアクセス出来るようにする必要があると思われる．その際には`docker-compose.yml`のnetworksの対象のネットワークに`external: true`を追加するといけるのではないか？※やってませんのでわかりません．
-
-## マイグレーションの実行
+## マイグレーション関係のコマンド
 `docker exec`コマンドでコンテナに対してコマンドを実行する．
 `docker exec`の次の`springdocker_app_1`は，`docker ps`で表示されるWebアプリケーションを動かしているコンテナのNAMESの部分である．
 コマンドラインからflywayを実行するには，各環境のapplication.propetiesを読み込む必要があるため，`-Dflyway.configFile=`で指定する必要がある．
@@ -41,7 +44,9 @@ docker exec springdocker_app_1 ./mvnw flyway:info -Dflyway.configFile=./src/main
 ```
 
 ### マイグレーションの実行
-`./mvnw flyway:migrate`でマイグレーションの実行をすることが出来る．
+マイグレーション自体は起動時に自動的に行ってくれるので，このコマンドを利用することは無い
+
+`./mvnw flyway:migrate` でマイグレーションの実行をすることが出来る．
 
 localのapplication.propertiesで実行したい場合
 
@@ -64,14 +69,29 @@ localのapplication.propertiesで実行したい場合
 docker exec springdocker_app_1 ./mvnw flyway:clean -Dflyway.configFile=./src/main/resources/local/application.properties
 ```
 
-## フォルダ構成について
-以下のmigrationやapplication.propertiesの各環境ごとに分けているのは，`pom.xml`の`<profiles></profiles>`に記述されている．
-### migration
-`/src/main/resources/common/db/migration`には共通のマイグレーションファイルが入っている．
+## 環境別のフォルダ構成について
+以下のmigrationやapplication.propertiesの各環境ごとに分けているのは，`pom.xml` の `<profiles></profiles>` に記述されている．
+### migration関連
+各環境ごとにマイグレーションファイルを用意することが出来る．
 
-また，各環境ごとにマイグレーションファイルを用意することが出来る．
+- 共通の環境
 
-例えば，local環境で，テストデータを入れたい場合`/src/main/resources/local/db/migration`にテストデータを挿入するマイグレーションファイルを入れることでマイグレーション時に実行してくれる．
-### application.properties
+    `/src/main/resources/common/db/migration` にテストデータを挿入するマイグレーションファイルを入れることでマイグレーション時に実行してくれる．
+
+- local環境
+
+    `/src/main/resources/local/db/migration` にテストデータを挿入するマイグレーションファイルを入れることでマイグレーション時に実行してくれる．
+
+- prod環境
+
+    `/src/main/resources/prod/db/migration` にテストデータを挿入するマイグレーションファイルを入れることでマイグレーション時に実行してくれる．
+## application.properties
 `/src/main/resources/`以下に各環境ごとにフォルダ分けされている．
-local環境は`/src/main/resources/local`の`application.properties`を参照する．
+
+- local環境
+
+    `/src/main/resources/local`の`application.properties`を参照する．
+
+- prod環境
+
+    `/src/main/resources/local`の`application.properties`を参照する．
