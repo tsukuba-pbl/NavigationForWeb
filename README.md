@@ -2,6 +2,24 @@
 
 # NavigationForWeb
 
+# 目次
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [how to use](#how-to-use)
+- [各種説明](#%E5%90%84%E7%A8%AE%E8%AA%AC%E6%98%8E)
+  - [DBへの接続](#db%E3%81%B8%E3%81%AE%E6%8E%A5%E7%B6%9A)
+  - [マイグレーション関係のコマンド](#%E3%83%9E%E3%82%A4%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%A2%E4%BF%82%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89)
+    - [マイグレーション情報の確認](#%E3%83%9E%E3%82%A4%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E6%83%85%E5%A0%B1%E3%81%AE%E7%A2%BA%E8%AA%8D)
+    - [マイグレーションの実行](#%E3%83%9E%E3%82%A4%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E5%AE%9F%E8%A1%8C)
+    - [テーブルの削除](#%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%81%AE%E5%89%8A%E9%99%A4)
+  - [環境別のフォルダ構成について](#%E7%92%B0%E5%A2%83%E5%88%A5%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E6%A7%8B%E6%88%90%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
+    - [migration関連](#migration%E9%96%A2%E9%80%A3)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # how to use
 local環境で動かす場合
 
