@@ -1,3 +1,22 @@
-<p>
-  event-registration works!
-</p>
+<div class="page">
+  <div class="container">
+    イベント名
+    <mat-form-field>
+      <input matInput (change)="changeEventName($e)" [(ngModel)]="eventName" placeholder="Input">
+    </mat-form-field>
+
+    イベント詳細
+    <mat-form-field>
+      <textarea matInput placeholder="Textarea"></textarea>
+    </mat-form-field>
+
+    イベント日
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    
+    <button (click)="submit()">hogehoge</button>
+  </div>
+</div>
