@@ -1,22 +1,52 @@
 <div class="page">
   <div class="container">
-    イベント名
-    <mat-form-field>
-      <input matInput (change)="changeEventName($e)" [(ngModel)]="eventName" placeholder="Input">
-    </mat-form-field>
+    <form class="event-register-form">
+      <mat-form-field>
+        <input type="text" matInput [(ngModel)]="eventName" placeholder="Event Name" [formControl]="eventNameFormControl">
+        <mat-error *ngIf="eventNameFormControl.hasError('required')">
+          Email Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    イベント詳細
-    <mat-form-field>
-      <textarea matInput placeholder="Textarea"></textarea>
-    </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Event Detail" [formControl]="eventDetailFormControl"></textarea>
+        <mat-error *ngIf="eventDetailFormControl.hasError('required')">
+          Event Detail is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    イベント日.
-    <mat-form-field>
-      <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    
-    <button (click)="submit()">hogehoge</button>
+      <mat-form-field>
+        <input matInput [(ngModel)]="eventLocation" placeholder="Event Location" [formControl]="eventLocationFormControl">
+        <mat-error *ngIf="eventLocationFormControl.hasError('required')">
+          Event Location is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a Event start date" [formControl]="eventStartDateFormControl">
+        <mat-error *ngIf="eventStartDateFormControl.hasError('pattern')">
+          Please enter a valid Date
+        </mat-error>
+        <mat-error *ngIf="eventStartDateFormControl.hasError('required')">
+            Event Start Date is <strong>required</strong>
+          </mat-error>
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a Event end date" [formControl]="eventEndDateFormControl">
+        <mat-error *ngIf="eventEndDateFormControl.hasError('pattern')">
+          Please enter a valid Date
+        </mat-error>
+        <mat-error *ngIf="eventEndDateFormControl.hasError('required')">
+            Event End Date is <strong>required</strong>
+          </mat-error>
+        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+      
+      <button (click)="submit()">hogehoge</button>
+    </form>
   </div>
 </div>

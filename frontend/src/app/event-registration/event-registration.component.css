@@ -1,9 +1,9 @@
-.container {
+.container form {
 	display: flex;
 	flex-direction: column;
 }
   
-.container > * {
+.container form > * {
   width: 100%;
 }
 
