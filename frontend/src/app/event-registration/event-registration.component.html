@@ -1,3 +1,42 @@
-<p>
-  event-registration works!
-</p>
+<div class="page">
+  <div class="container">
+    <form class="event-register-form" [formGroup]="eventForm" (ngSubmit)="onSubmit(eventForm)">
+      <mat-form-field>
+        <input type="text" matInput placeholder="Event Name" [formControl]="eventForm.controls['eventName']">
+        <mat-error *ngIf="!eventForm.controls['eventName'].valid">
+          Email Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea matInput placeholder="Event Detail" [formControl]="eventForm.controls['eventDetail']"></textarea>
+        <mat-error *ngIf="!eventForm.controls['eventDetail'].valid">
+          Event Detail is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Event Location" [formControl]="eventForm.controls['eventLocation']">
+        <mat-error *ngIf="!eventForm.controls['eventLocation'].valid">
+          Event Location is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <input type="datetime-local" matInput placeholder="Choose a Event start date" [formControl]="eventForm.controls['eventStartDate']">
+        <mat-error *ngIf="!eventForm.controls['eventStartDate'].valid">
+            Event Start Date is <strong>required</strong>
+        </mat-error>  
+      </mat-form-field>
+
+      <mat-form-field>
+        <input type="datetime-local" matInput placeholder="Choose a Event end date" [formControl]="eventForm.controls['eventEndDate']">
+        <mat-error *ngIf="!eventForm.controls['eventEndDate'].valid">
+            Event End Date is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      
+      <button type="submit" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
+    </form>
+  </div>
+</div>

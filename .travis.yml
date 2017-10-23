@@ -17,3 +17,7 @@ matrix:
         - cd backend
       script:
         - ./mvnw test
+branches:
+    only:
+        - master
+        - develop
