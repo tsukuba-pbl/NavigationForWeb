@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDatepicker, DateAdapter, NativeDateAdapter } from '@angular/material';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-event-registration',
@@ -8,24 +7,27 @@ import { MatDatepicker, DateAdapter, NativeDateAdapter } from '@angular/material
   styleUrls: ['./event-registration.component.css']
 })
 export class EventRegistrationComponent implements OnInit {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
-  eventName: string = ""
-  eventNameFormControl: FormControl = new FormControl('', Validators.required)
-  eventDetailFormControl: FormControl = new FormControl('', Validators.required)
-  eventLocationFormControl: FormControl = new FormControl('', Validators.required)
-  eventStartDateFormControl: FormControl = new FormControl('', Validators.required)
-  eventEndDateFormControl: FormControl = new FormControl('', [Validators.required])
+  eventForm = new FormGroup({
+    eventName: new FormControl('', Validators.required),
+    eventDetail: new FormControl('', Validators.required),
+    eventLocation: new FormControl('', Validators.required),
+    eventStartDate: new FormControl('', Validators.required),
+    eventEndDate: new FormControl('', [Validators.required])
+  })
 
-  constructor(dateAdapter: DateAdapter<NativeDateAdapter>) {
-    dateAdapter.setLocale('ja-JA')
+  constructor() {
   }
 
   ngOnInit() {
     
   }
 
-  submit() {
-    console.log(this.datepicker)
+  onSubmit(formGroup: FormGroup) {
+    if(!formGroup.valid) {
+      return;
+    }
+    const formValue: Object = formGroup.value
+    // serviceを呼んで，登録
   }
 
 }

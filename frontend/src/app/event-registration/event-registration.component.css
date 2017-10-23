@@ -10,3 +10,7 @@
 .page {
 	margin: 10px 20px;
 }
+
+mat-form-field {
+	margin-top: 20px;
+}
