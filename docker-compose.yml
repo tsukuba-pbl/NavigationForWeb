@@ -6,9 +6,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/logs:/var/log/nginx
+      - ./nginx/local/conf.d:/etc/nginx/conf.d
+      - ./nginx/local/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/local/logs:/var/log/nginx
     links:
       - backend
       - frontend
