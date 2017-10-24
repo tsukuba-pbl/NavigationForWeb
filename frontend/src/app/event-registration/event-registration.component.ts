@@ -45,7 +45,13 @@ export class EventRegistrationComponent implements OnInit {
 
     this.eventService.createEvent(requestBody)
     .subscribe(
-      result => this.resultText = "イベントを登録できました",
+      result => {
+        if(result == 1) {
+          this.resultText = "イベントを登録できました"
+        } else {
+          this.resultText = "イベントを登録に失敗しました"
+        }
+      },
       error => this.resultText = <any>error
     );
   }
