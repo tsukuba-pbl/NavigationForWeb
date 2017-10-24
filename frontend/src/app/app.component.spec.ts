@@ -1,6 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { EventRegistrationComponent } from './event-registration/event-registration.component'
+import { IndexComponent } from './index/index.component'
 import { MatIconModule, MatButtonModule, MatToolbarModule } from '@angular/material'
 
 
@@ -10,7 +12,9 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        // EventRegistrationComponent,
+        // IndexComponent
       ],
       imports: [
         MatIconModule,

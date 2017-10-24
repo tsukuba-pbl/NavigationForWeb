@@ -6,9 +6,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 
+import { HttpModule } from '@angular/http';
+import { Observable } from 'rxjs/Observable'
+import { EventService } from '../event.service'
+
 describe('EventRegistrationComponent', () => {
   let component: EventRegistrationComponent;
   let fixture: ComponentFixture<EventRegistrationComponent>;
+
+  const eventServiceMock = {
+    addEvent: () => Observable.create(new Object()).map(data =>JSON.stringify(data))
+  }
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,11 +24,15 @@ describe('EventRegistrationComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
+        HttpModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
+      ],
+      providers: [
+        {provide: EventService, useValue: eventServiceMock}
       ]
     })
     .compileComponents();

@@ -4,6 +4,7 @@ import { RouterModule, Routes }   from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
+
 import { AppComponent } from './app.component';
 import { EventRegistrationComponent } from './event-registration/event-registration.component';
 import { IndexComponent } from './index/index.component';
