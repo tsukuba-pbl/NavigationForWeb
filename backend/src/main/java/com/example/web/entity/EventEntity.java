@@ -13,4 +13,6 @@ public class EventEntity {
 	private String startDate;
 	private String endDate;
 	private String userId;
+	private Date created_at;
+	private Date updated_at;
 }
