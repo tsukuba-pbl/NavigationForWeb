@@ -1,0 +1,1 @@
+insert into users (id, name, email, password) values ("aiueo", "うめ", "ume@example.com", "ume");

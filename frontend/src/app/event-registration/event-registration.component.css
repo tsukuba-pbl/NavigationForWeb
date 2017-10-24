@@ -14,3 +14,10 @@
 mat-form-field {
 	margin-top: 20px;
 }
+
+.result-status {
+	color: red;
+	font-size: 24px;
+	text-align: center;
+	margin-top: 10px;
+}
