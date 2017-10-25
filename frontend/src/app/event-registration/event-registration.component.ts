@@ -12,7 +12,7 @@ import { EventService } from '../event.service'
 export class EventRegistrationComponent implements OnInit {
   eventForm = new FormGroup({
     eventName: new FormControl('', Validators.required),
-    eventDetail: new FormControl('', Validators.required),
+    eventDescription: new FormControl('', Validators.required),
     eventLocation: new FormControl('', Validators.required),
     eventStartDate: new FormControl('', Validators.required),
     eventEndDate: new FormControl('', [Validators.required])
@@ -36,7 +36,7 @@ export class EventRegistrationComponent implements OnInit {
     let requestBody: EventType = {
       id: "",
       name: requestParams.eventName,
-      description: requestParams.eventDetail,
+      description: requestParams.eventDescription,
       location: requestParams.eventLocation,
       startDate: requestParams.eventStartDate,
       endDate: requestParams.eventEndDate,
