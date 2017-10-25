@@ -17,6 +17,7 @@ matrix:
         - cd backend
       script:
         - ./mvnw test
+      after_success: './sonar.sh ${TRAVIS_PULL_REQUEST} ${SONAR_TOKEN} ${GITHUB_OAUTH}'
 branches:
     only:
         - master
