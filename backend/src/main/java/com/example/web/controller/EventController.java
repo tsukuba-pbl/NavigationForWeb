@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.EventEntity;
+import com.mysql.jdbc.log.Log;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,16 @@ public class EventController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public int add(@RequestBody EventEntity event) throws ParseException {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String token = RandomStringUtils.randomAlphanumeric(5);
-		event.setId(token);
+		String eventId = "";
+		while(true){
+			eventId = RandomStringUtils.randomAlphanumeric(5);
+			int checkCount = jdbcTemplate.queryForObject("select count(id) from events where id = :id",
+					new MapSqlParameterSource().addValue("id", eventId), Integer.class);
+			if(checkCount < 1) {
+				break;
+			}
+		}
+		event.setId(eventId);
 		String sql = ""
 				+ "insert into events (id, name, description, location, start_date, end_date, user_id) "
 				+ "values (:id, :name, :description, :location, :start_date, :end_date, :user_id)";
