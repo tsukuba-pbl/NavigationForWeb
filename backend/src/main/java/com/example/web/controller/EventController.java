@@ -46,6 +46,7 @@ public class EventController {
 				break;
 			}
 		}
+		String hogehoge = "";
 		event.setId(eventId);
 		String sql = ""
 				+ "insert into events (id, name, description, location, start_date, end_date, user_id) "
