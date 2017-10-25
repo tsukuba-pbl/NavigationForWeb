@@ -9,8 +9,8 @@
       </mat-form-field>
 
       <mat-form-field>
-        <textarea matInput placeholder="Event Detail" [formControl]="eventForm.controls['eventDetail']"></textarea>
-        <mat-error *ngIf="!eventForm.controls['eventDetail'].valid">
+        <textarea matInput placeholder="Event Detail" [formControl]="eventForm.controls['eventDescription']"></textarea>
+        <mat-error *ngIf="!eventForm.controls['eventDescription'].valid">
           Event Detail is <strong>required</strong>
         </mat-error>
       </mat-form-field>
