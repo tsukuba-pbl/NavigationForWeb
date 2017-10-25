@@ -11,11 +11,11 @@ import { EventService } from '../event.service'
 })
 export class EventRegistrationComponent implements OnInit {
   eventForm = new FormGroup({
-    eventName: new FormControl('', Validators.required),
-    eventDescription: new FormControl('', Validators.required),
-    eventLocation: new FormControl('', Validators.required),
+    eventName: new FormControl('', [Validators.required, Validators.pattern(".*\\S.*")]),
+    eventDescription: new FormControl('', [Validators.required, Validators.pattern(".*\\S.*")]),
+    eventLocation: new FormControl('', [Validators.required, Validators.pattern(".*\\S.*")]),
     eventStartDate: new FormControl('', Validators.required),
-    eventEndDate: new FormControl('', [Validators.required])
+    eventEndDate: new FormControl('', Validators.required)
   })
   errorMessage: string;
   resultText: string = "";
