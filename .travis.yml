@@ -18,7 +18,8 @@ matrix:
       script:
         - ./mvnw test
       after_success: 'sh ./sonar.sh ${TRAVIS_PULL_REQUEST} ${SONAR_TOKEN} ${GITHUB_OAUTH}'
-      secure: "bWoJcDnio17aeLkZgS7dOxFxAg4HkwXhw7IqPW+NHXP4ZKy5LA4FqSiKJzU2tUZ80Jf0uhkBUR60Rs3nyaWc+OQxsxI6NSNSgk7jdvla+g68W/hKv/ovsknDu2heTgsTvXwSoK8//y8alByyCSaYit3GlmZgkDMifQ+5/Lq+HhwfgvkDB02ElZApT39fuewWZtJLr6FqHnDTbWUVsor5UKqJYoNvXjhlNl5KhTlWs27IQKcOaTErQQfwbbauoj9fYJwaNo3owh03+Lrr/CjLSFoaXL2zlx4Nub0ZFz2Y9D1lr7ATTs9HsgZjbfAPQD0Vnm0S/RTtgHkHBkeT7N78OCGbrXjTTkpiv73SoYDqTepY6XGQuU4uBdU7sTrdfbOvoBgpTfQZC9ulEpduhGQc6uB/za8GrmhsSQ4eZ7z+pYVzvsfZgUOz78Ki1WDwLbmmZE61gqAIDvmbHdDttLd0PZ0jJpgvrBpLQSI/das72vJ+Ddfbj227qug0bt0+MB9/JR1aNUcfdQQhsUUdKkuRH4xwS2394MVgG+MWo8XAk3FscGUIE7OpdSgRw2dwiVa/QazjF+DYPlZAjN9/ns7Yc9gf13dPie5iW8RuNS7pz3DquBpJl9Bg6BvBeuc0EuctOshOhrA3BY63vNqw96sXcYyVtsUW12NXNCH3C5MLV+c="
+env:
+    secure: "bWoJcDnio17aeLkZgS7dOxFxAg4HkwXhw7IqPW+NHXP4ZKy5LA4FqSiKJzU2tUZ80Jf0uhkBUR60Rs3nyaWc+OQxsxI6NSNSgk7jdvla+g68W/hKv/ovsknDu2heTgsTvXwSoK8//y8alByyCSaYit3GlmZgkDMifQ+5/Lq+HhwfgvkDB02ElZApT39fuewWZtJLr6FqHnDTbWUVsor5UKqJYoNvXjhlNl5KhTlWs27IQKcOaTErQQfwbbauoj9fYJwaNo3owh03+Lrr/CjLSFoaXL2zlx4Nub0ZFz2Y9D1lr7ATTs9HsgZjbfAPQD0Vnm0S/RTtgHkHBkeT7N78OCGbrXjTTkpiv73SoYDqTepY6XGQuU4uBdU7sTrdfbOvoBgpTfQZC9ulEpduhGQc6uB/za8GrmhsSQ4eZ7z+pYVzvsfZgUOz78Ki1WDwLbmmZE61gqAIDvmbHdDttLd0PZ0jJpgvrBpLQSI/das72vJ+Ddfbj227qug0bt0+MB9/JR1aNUcfdQQhsUUdKkuRH4xwS2394MVgG+MWo8XAk3FscGUIE7OpdSgRw2dwiVa/QazjF+DYPlZAjN9/ns7Yc9gf13dPie5iW8RuNS7pz3DquBpJl9Bg6BvBeuc0EuctOshOhrA3BY63vNqw96sXcYyVtsUW12NXNCH3C5MLV+c="
 branches:
     only:
         - master
