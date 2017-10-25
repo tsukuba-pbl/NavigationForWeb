@@ -23,7 +23,7 @@ services:
     volumes:
       - ./frontend:/app
     working_dir: /app
-    command: npm start
+    command: bash -c "yarn install && npm start"
     networks:
       navigation-for-web:
         ipv4_address: 10.5.0.4
