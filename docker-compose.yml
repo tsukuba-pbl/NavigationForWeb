@@ -13,14 +13,17 @@ services:
       - backend
       - frontend
     restart: always
+
   frontend: 
     image: node:6.11.3
-    expose:
-      - "4200"
+    expose: 
+      - "80"
+      - "443"
     volumes:
       - ./frontend:/app
     working_dir: /app
     command: bash -c "yarn install && npm start"
+
   backend:
     image: openjdk:8-jdk-alpine
     expose:
@@ -28,14 +31,16 @@ services:
     volumes:
       - ./backend:/app
     working_dir: /app
-    command: ./mvnw -Plocal spring-boot:run
+    command: ./mvnw spring-boot:run -Drun.profiles=local
     links: 
       - mysql
+
   mysql-data:
     image: busybox
     volumes:
       - /var/lib/mysql
     container_name: mysql-datastore
+
   mysql:
     image: mysql:5.7
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci

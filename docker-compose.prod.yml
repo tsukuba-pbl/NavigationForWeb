@@ -13,20 +13,24 @@ services:
       - backend
       - frontend
     restart: always
-    networks:
-      navigation-for-web:
-        ipv4_address: 10.5.0.5
-  frontend: 
-    image: node:6.11.3
+
+  frontend:
+    image: nginx:1.13.5
     expose:
-      - "4200"
+      - "80"
+      - "433"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend/logs:/var/log/nginx
+    restart: always
+
+  webpack: 
+    image: node:6.11.3
     volumes:
       - ./frontend:/app
     working_dir: /app
-    command: npm start
-    networks:
-      navigation-for-web:
-        ipv4_address: 10.5.0.4
+    command: bash -c "yarn install && npm run build"
+
   backend:
     image: openjdk:8-jdk-alpine
     expose:
@@ -34,24 +38,25 @@ services:
     volumes:
       - ./backend:/app
     working_dir: /app
-    command: ./mvnw -Pprod spring-boot:run
+    command: ./mvnw spring-boot:run -Drun.profiles=prod
     links: 
       - mysql
-    networks:
-      navigation-for-web: 
-        ipv4_address: 10.5.0.3
+
   mysql-data:
     image: busybox
     volumes:
       - /var/lib/mysql
     container_name: mysql-datastore
+
   mysql:
     image: mysql:5.7
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     environment:
        MYSQL_ROOT_PASSWORD: password
-       MYSQL_DATABASE: navigation_for_web
+       MYSQL_DATABASE: navigation_for_web_prod
        MYSQL_USER: umesystems
        MYSQL_PASSWORD: password
+       TZ: "Asia/Tokyo"
     ports:
       - "3306:3306"
     expose:
@@ -59,14 +64,3 @@ services:
     container_name: mysql-db
     volumes_from:
       - mysql-data
-    networks:
-      navigation-for-web: 
-        ipv4_address: 10.5.0.2
-networks:
-  navigation-for-web:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.5.0.0/16
-          gateway: 10.5.0.1
