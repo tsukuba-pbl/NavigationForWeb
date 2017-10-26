@@ -28,7 +28,7 @@ public class EventController {
     
 	@ResponseBody
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public int add(@RequestBody EventEntity event) throws ParseException {
+	public int add(@RequestBody EventEntity event) {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String eventId = "";
 		while(true){
@@ -52,8 +52,7 @@ public class EventController {
 	            .addValue("start_date", event.getStartDate())
 	            .addValue("end_date", event.getEndDate())
 	            .addValue("user_id", event.getUserId());
-	    int result = jdbcTemplate.update(sql, param);
-	    return result;
+	    return jdbcTemplate.update(sql, param);
 	}
 	
 	public int sum(int a, int b) {
