@@ -13,9 +13,6 @@ services:
       - backend
       - frontend
     restart: always
-    networks:
-      navigation-for-web:
-        ipv4_address: 10.5.0.5
   frontend: 
     image: node:6.11.3
     expose:
@@ -24,9 +21,6 @@ services:
       - ./frontend:/app
     working_dir: /app
     command: bash -c "yarn install && npm start"
-    networks:
-      navigation-for-web:
-        ipv4_address: 10.5.0.4
   backend:
     image: openjdk:8-jdk-alpine
     expose:
@@ -37,9 +31,6 @@ services:
     command: ./mvnw -Plocal spring-boot:run
     links: 
       - mysql
-    networks:
-      navigation-for-web: 
-        ipv4_address: 10.5.0.3
   mysql-data:
     image: busybox
     volumes:
@@ -61,14 +52,3 @@ services:
     container_name: mysql-db
     volumes_from:
       - mysql-data
-    networks:
-      navigation-for-web: 
-        ipv4_address: 10.5.0.2
-networks:
-  navigation-for-web:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.5.0.0/16
-          gateway: 10.5.0.1
