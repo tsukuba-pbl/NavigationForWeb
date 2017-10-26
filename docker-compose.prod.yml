@@ -21,7 +21,8 @@ services:
       - "433"
     volumes:
       - ./frontend/dist:/usr/share/nginx/html
-      - ./frontend/logs:/var/log/nginx
+      - ./nginx_frontend/logs:/var/log/nginx
+      - ./nginx_frontend/conf.d:/etc/nginx/conf.d
     restart: always
 
   webpack: 
