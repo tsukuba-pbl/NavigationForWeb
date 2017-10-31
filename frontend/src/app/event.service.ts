@@ -10,7 +10,6 @@ export class EventService {
   constructor(private http: Http) { }
 
   createEvent(event: EventType): Observable<any> {
-    console.log(event)
     return this.http.post('/api/event/new', event)
     .map(this.extractData)
     .catch(this.handleError);

@@ -16,8 +16,15 @@ mat-form-field {
 }
 
 .result-status {
-	color: red;
+	color: green;
 	font-size: 24px;
 	text-align: center;
 	margin-top: 10px;
+}
+
+.error-msg {
+	color: red;
+	font-size: 10px;
+	text-align: center;
+	margin-bottom: 20px;
 }
