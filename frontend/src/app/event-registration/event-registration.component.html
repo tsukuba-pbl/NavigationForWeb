@@ -1,6 +1,6 @@
 <div class="page">
   <div class="container">
-    <form class="event-register-form" [formGroup]="eventForm" (ngSubmit)="onSubmit(eventForm)">
+    <form class="event-register-form" [formGroup]="eventForm" #f="ngForm" (ngSubmit)="onSubmit(eventForm)">
       <mat-form-field>
         <input type="text" matInput placeholder="Event Name" [formControl]="eventForm.controls['eventName']">
         <mat-error *ngIf="!eventForm.controls['eventName'].valid">
@@ -9,9 +9,9 @@
       </mat-form-field>
 
       <mat-form-field>
-        <textarea matInput placeholder="Event Detail" [formControl]="eventForm.controls['eventDescription']"></textarea>
+        <textarea matInput placeholder="Event Description" [formControl]="eventForm.controls['eventDescription']"></textarea>
         <mat-error *ngIf="!eventForm.controls['eventDescription'].valid">
-          Event Detail is <strong>required</strong>
+          Event Description is <strong>required</strong>
         </mat-error>
       </mat-form-field>
 
@@ -36,6 +36,10 @@
         </mat-error>
       </mat-form-field>
       
+      <div class="error-msg">
+        {{errorMessage}}
+      </div>
+
       <button type="submit" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
     </form>
     <div class="result-status">
