@@ -29,7 +29,6 @@ export class EventRegistrationComponent implements OnInit {
   }
 
   onSubmit(formGroup: FormGroup) {
-    console.log(formGroup)
     if(!formGroup.valid) {
       return
     }
@@ -53,7 +52,6 @@ export class EventRegistrationComponent implements OnInit {
       endDate: requestParams.eventEndDate,
       userId: "aiueo"
     }
-    console.log(requestBody)
 
     this.eventService.createEvent(requestBody)
     .subscribe(
