@@ -46,13 +46,14 @@ export class EventRegistrationComponent implements OnInit {
 
     let requestBody: EventType = {
       id: "",
-      name: requestParams.eventName,
-      description: requestParams.eventDescription,
-      location: requestParams.eventLocation,
+      name: requestParams.eventName.trim(),
+      description: requestParams.eventDescription.trim(),
+      location: requestParams.eventLocation.trim(),
       startDate: requestParams.eventStartDate,
       endDate: requestParams.eventEndDate,
       userId: "aiueo"
     }
+    console.log(requestBody)
 
     this.eventService.createEvent(requestBody)
     .subscribe(
