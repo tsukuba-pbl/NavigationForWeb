@@ -12,6 +12,7 @@ import com.example.web.entity.EventEntity;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,20 +25,28 @@ public class EventController {
     @Autowired
     private DataSource dataSource;
     
+    @Autowired
+    private RedisTemplate<String, EventEntity> redisTemplate;
+    
 	@ResponseBody
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public int add(@RequestBody EventEntity event) {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String eventId = "";
+		int tryCount = 0;
 		while(true){
+			tryCount = tryCount + 1;
 			eventId = RandomStringUtils.randomAlphanumeric(5);
 			int checkCount = jdbcTemplate.queryForObject("select count(id) from events where id = :id",
 					new MapSqlParameterSource().addValue("id", eventId), Integer.class);
 			if(checkCount < 1) {
 				break;
 			}
+			if(tryCount > 3) {
+				return -1;
+			}
 		}
-
+		
 		event.setId(eventId);
 		String sql = ""
 				+ "insert into events (id, name, description, location, start_date, end_date, user_id) "
@@ -51,9 +60,5 @@ public class EventController {
 	            .addValue("end_date", event.getEndDate())
 	            .addValue("user_id", event.getUserId());
 	    return jdbcTemplate.update(sql, param);
-	}
-	
-	public int sum(int a, int b) {
-		return a+b;
 	}
 }
