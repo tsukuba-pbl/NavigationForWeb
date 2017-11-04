@@ -1,6 +1,10 @@
 package com.example.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +31,7 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public RedisCacheManager redisCacheManager() {
-	    return new RedisCacheManager(redisTemplate());
-	}
+    public CacheManager cacheManager() {
+        return new RedisCacheManager(redisTemplate());
+    }
 }
