@@ -20,6 +20,7 @@ export class EventRegistrationComponent implements OnInit {
   @ViewChild('f') form
   errorMessage: string = ""
   resultText: string = ""
+  eventStatus: number = 0
 
   constructor(private eventService: EventService) {
 
@@ -86,6 +87,8 @@ export class EventRegistrationComponent implements OnInit {
       this.errorMessage = "終了日時が開始日時より過去です．正しい日時を入力してください．"
       return
     }
+    this.errorMessage = ""
+    this.eventStatus++
   }
 
   /**
@@ -106,4 +109,9 @@ export class EventRegistrationComponent implements OnInit {
     }
   }
 
+  undo() {
+    if (this.eventStatus >= 1){
+      this.eventStatus--;
+    }
+  }
 }

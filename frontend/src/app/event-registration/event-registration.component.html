@@ -1,59 +1,62 @@
 <div class="page">
   <div class="container">
     <h1>イベントの登録</h1>
+    <div class="tabs">
+      <div class="tab-item" [ngClass]="eventStatus === 0 ? 'active': ''">
+        Event Info
+      </div>
+      <div class="tab-item" [ngClass]="eventStatus === 1 ? 'active': ''">
+        Event Locations
+      </div>
+    </div>
     <form class="event-register-form" [formGroup]="eventForm" #f="ngForm" (ngSubmit)="onSubmit(eventForm)">
-      <mat-tab-group>
-        <mat-tab label="Event Info">
-          <div class="container">
-            <mat-form-field>
-              <input type="text" matInput placeholder="Event Name" [formControl]="eventForm.controls['eventName']">
-              <mat-error *ngIf="!eventForm.controls['eventName'].valid">
-                Email Name is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
+      <div class="container tab-content" [ngClass]="eventStatus === 0 ? 'active': ''">
+        <mat-form-field>
+          <input type="text" matInput placeholder="Event Name" [formControl]="eventForm.controls['eventName']">
+          <mat-error *ngIf="!eventForm.controls['eventName'].valid">
+            Email Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
 
-            <mat-form-field>
-              <textarea matInput placeholder="Event Description" [formControl]="eventForm.controls['eventDescription']"></textarea>
-              <mat-error *ngIf="!eventForm.controls['eventDescription'].valid">
-                Event Description is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Event Description" [formControl]="eventForm.controls['eventDescription']"></textarea>
+          <mat-error *ngIf="!eventForm.controls['eventDescription'].valid">
+            Event Description is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
 
-            <mat-form-field>
-              <input matInput placeholder="Event Location" [formControl]="eventForm.controls['eventLocation']">
-              <mat-error *ngIf="!eventForm.controls['eventLocation'].valid">
-                Event Location is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-            
-            <mat-form-field>
-              <input type="datetime-local" matInput placeholder="Choose a Event start date" [formControl]="eventForm.controls['eventStartDate']">
-              <mat-error *ngIf="!eventForm.controls['eventStartDate'].valid">
-                  Event Start Date is <strong>required</strong>
-              </mat-error>  
-            </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Event Location" [formControl]="eventForm.controls['eventLocation']">
+          <mat-error *ngIf="!eventForm.controls['eventLocation'].valid">
+            Event Location is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field>
+          <input type="datetime-local" matInput placeholder="Choose a Event start date" [formControl]="eventForm.controls['eventStartDate']">
+          <mat-error *ngIf="!eventForm.controls['eventStartDate'].valid">
+              Event Start Date is <strong>required</strong>
+          </mat-error>  
+        </mat-form-field>
 
-            <mat-form-field>
-              <input type="datetime-local" matInput placeholder="Choose a Event end date" [formControl]="eventForm.controls['eventEndDate']">
-              <mat-error *ngIf="!eventForm.controls['eventEndDate'].valid">
-                  Event End Date is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-            
-            <div class="error-msg">
-              {{errorMessage}}
-            </div>
+        <mat-form-field>
+          <input type="datetime-local" matInput placeholder="Choose a Event end date" [formControl]="eventForm.controls['eventEndDate']">
+          <mat-error *ngIf="!eventForm.controls['eventEndDate'].valid">
+              Event End Date is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        
+        <div class="error-msg">
+          {{errorMessage}}
+        </div>
 
-            <button type="button" color="primary" mat-raised-button (click)="checkEventInfo(eventForm)">次へ</button>
-          </div>
-        </mat-tab>
+        <button type="button" class="button" color="primary" mat-raised-button (click)="checkEventInfo(eventForm)">次へ</button>
+      </div>
 
-        <mat-tab label="Event Locations">
-          <div class="container">
-            <button type="submit" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+      <div class="container tab-content" [ngClass]="eventStatus === 1 ? 'active': ''">
+        <button type="button" class="button" color="warn" mat-raised-button (click)="undo()">戻る</button>
+        <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
+      </div>
     </form>
     <div class="result-status">
       {{resultText}}
