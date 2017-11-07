@@ -4,7 +4,7 @@ import { EventRegistrationComponent } from './event-registration.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatTabsModule } from '@angular/material';
 
 import { HttpModule } from '@angular/http';
 import { Observable } from 'rxjs/Observable'
@@ -30,6 +30,7 @@ describe('EventRegistrationComponent', () => {
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatTabsModule,
       ],
       providers: [
         {provide: EventService, useValue: eventServiceMock}

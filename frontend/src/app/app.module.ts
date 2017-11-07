@@ -17,6 +17,7 @@ import {
   MatInputModule, 
   MatDatepickerModule,
   MatNativeDateModule,
+  MatTabsModule,
 } from '@angular/material';
 
 const routes: Routes = [
@@ -44,6 +45,7 @@ const routes: Routes = [
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTabsModule,
     RouterModule.forRoot(routes),
   ],
   exports: [
