@@ -15,12 +15,11 @@ export class EventRegistrationComponent implements OnInit {
     eventDescription: new FormControl('', [Validators.required, Validators.pattern("[^ \\t]+[ \\t]*[^ \\t]+|.*[^ \\t]+|[^ \\t]+[ \\t]*")]),
     eventLocation: new FormControl('', [Validators.required, Validators.pattern(".*\\S.*")]),
     eventStartDate: new FormControl('', Validators.required),
-    eventEndDate: new FormControl('', Validators.required)
+    eventEndDate: new FormControl('', Validators.required),
   })
   @ViewChild('f') form
   errorMessage: string = ""
   resultText: string = ""
-  eventStatus: number = 0
 
   constructor(private eventService: EventService) {
 
@@ -68,29 +67,6 @@ export class EventRegistrationComponent implements OnInit {
     );
   }
 
-  checkEventInfo(formGroup: FormGroup) {
-    if(!formGroup.controls.eventName.valid || 
-      !formGroup.controls.eventDescription.valid || 
-      !formGroup.controls.eventLocation.valid || 
-      !formGroup.controls.eventStartDate.valid ||
-      !formGroup.controls.eventEndDate.valid
-    ) {
-      return
-    }
-    const requestParams = formGroup.value
-
-    let datetimeValid = this.compareDateTime(new Date(requestParams.eventStartDate), new Date(requestParams.eventEndDate))
-    if (datetimeValid == 0) {
-      this.errorMessage = "開始日時と終了日時が同じです．イベントの期間を正確に入力してください．"
-      return
-    } else if (datetimeValid == -1) {
-      this.errorMessage = "終了日時が開始日時より過去です．正しい日時を入力してください．"
-      return
-    }
-    this.errorMessage = ""
-    this.eventStatus++
-  }
-
   /**
    * 日付の比較
    * 
@@ -106,12 +82,6 @@ export class EventRegistrationComponent implements OnInit {
       return -1
     } else {
       return 0
-    }
-  }
-
-  undo() {
-    if (this.eventStatus >= 1){
-      this.eventStatus--;
     }
   }
 }

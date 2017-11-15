@@ -14,6 +14,10 @@ export class EventService {
     .map(this.extractData)
     .catch(this.handleError);
   }
+
+  getEventList(): Observable<any> {
+    return this.http.get('/api/event').map(this.extractData).catch(this.handleError)
+  }
   
   private extractData(res: Response) {
     let body = res.json();
