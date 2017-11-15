@@ -3,14 +3,14 @@
     <h1>作成したイベント</h1>
     
     <div class="eventlist">
-      <div class="event-content" *ngFor="let event of eventList; let i = index;">
+      <div class="event-content" *ngFor="let event of eventList; let i = index;" [routerLink]="['/event', event.id]">
         <div class="event-name">{{event.name}}</div>
         <div class="event-description">
           {{event.description}}
         </div>
         <div class="event-footer">
-            <div class="event-start-date">開始日：{{event.startDate}}</div>
-            <div class="event-end-date">終了日：{{event.endDate}}</div>
+            <div class="event-start-date">開始日：{{event.startDate | date: 'yyyy/MM/dd HH:mm:ss'}}</div>
+            <div class="event-end-date">終了日：{{event.endDate | date: 'yyyy/MM/dd HH:mm:ss'}}</div>
         </div>
       </div>
     </div>
