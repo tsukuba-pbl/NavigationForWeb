@@ -22,8 +22,8 @@ public class EventEntity {
 	@JsonDeserialize(using = CustomDeserializer.DateDeserializer.class)
 	private Date endDate;
 	private String userId;
-	private Date created_at;
-	private Date updated_at;
+	private Date createdAt;
+	private Date updatedAt;
 	
 	public class EventRowMapper implements RowMapper<EventEntity> {
 
