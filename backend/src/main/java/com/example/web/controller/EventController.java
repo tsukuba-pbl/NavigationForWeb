@@ -34,7 +34,7 @@ public class EventController {
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
     
     @ResponseBody
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "", method = RequestMethod.GET)
     public List<EventEntity> index() throws SQLException {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events";
