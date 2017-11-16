@@ -18,7 +18,6 @@ export class IndexComponent implements OnInit {
     this.eventService.getEventList()
     .subscribe(result => {
       this.eventList = result
-      console.log(this.eventList)
     })
   }
 
