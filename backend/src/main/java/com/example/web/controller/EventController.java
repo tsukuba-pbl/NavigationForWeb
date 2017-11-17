@@ -53,7 +53,7 @@ public class EventController {
 		logger.info("will fetch event from databases");
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
-		if (event.size() > 0) {
+		if (!event.isEmpty()) {
 			resultEvent = event.get(0);
 		}
 		return resultEvent;
