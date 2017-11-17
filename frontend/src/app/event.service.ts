@@ -15,7 +15,7 @@ export class EventService {
     .catch(this.handleError);
   }
 
-  getEventList(): Observable<any> {
+  getEventList(): Observable<EventType[]> {
     return this.http.get('/api/events').map(this.extractData).catch(this.handleError)
   }
 
@@ -24,13 +24,12 @@ export class EventService {
   }
   
   private extractData(res: Response) {
-    let body = res.json();
-    return body || {};
+    let body = res.json()
+    return body || {}
   }
 
   private handleError(error: any) {
-    let errMsg = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg);
-    return Observable.throw(errMsg);
+    let errMsg = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error'
+    return Observable.throw(errMsg)
   }
 }
