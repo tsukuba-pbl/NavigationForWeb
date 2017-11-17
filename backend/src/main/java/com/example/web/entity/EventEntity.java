@@ -29,7 +29,6 @@ public class EventEntity {
 
 		@Override
 		public EventEntity mapRow(ResultSet arg0, int arg1) throws SQLException {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		

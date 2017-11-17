@@ -1,8 +1,6 @@
 package com.example.web.controller;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -36,7 +34,7 @@ public class EventController {
     
     @ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.GET)
-    public List<EventEntity> index() throws SQLException {
+    public List<EventEntity> index() {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events";
 		logger.info("will fetch event list from databases");
@@ -47,13 +45,12 @@ public class EventController {
     
     @ResponseBody
    	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("id") String id) throws SQLException {
+    public EventEntity getEvent(@PathVariable("id") String id) {
     		EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events where id = :id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		logger.info("will fetch event from databases");
-		//List<EventEntity> eventList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventEntity.class));
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
 		if (event.size() > 0) {
