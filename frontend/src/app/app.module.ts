@@ -23,8 +23,8 @@ import { EventDetailComponent } from './event-detail/event-detail.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'event/new',  component: EventRegistrationComponent },
-  { path: 'event/:id', component: EventDetailComponent }
+  { path: 'events/new',  component: EventRegistrationComponent },
+  { path: 'events/:id', component: EventDetailComponent }
 ];
 
 @NgModule({

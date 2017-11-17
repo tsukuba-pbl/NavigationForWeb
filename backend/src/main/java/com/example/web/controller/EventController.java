@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +26,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 @Controller
-@RequestMapping("/api/event")
+@RequestMapping("/api/events")
 public class EventController {
 
     @Autowired
@@ -43,6 +44,24 @@ public class EventController {
 		logger.info("have fetched event list from databases");
 		return eventList;
     }
+    
+    @ResponseBody
+   	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public EventEntity getEvent(@PathVariable("id") String id) throws SQLException {
+    		EventEntity resultEvent = new EventEntity();
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		String sql = "select * from events where id = :id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		logger.info("will fetch event from databases");
+		//List<EventEntity> eventList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventEntity.class));
+		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
+		logger.info("have fetched event from databases");
+		if (event.size() > 0) {
+			resultEvent = event.get(0);
+		}
+		return resultEvent;
+    }
+    
     
 	@ResponseBody
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)

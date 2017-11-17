@@ -3,10 +3,6 @@
 	flex-direction: column;
 }
 
-.page {
-	margin: 10px 20px;
-}
-
 form > * {
 	width: 100%;
 }

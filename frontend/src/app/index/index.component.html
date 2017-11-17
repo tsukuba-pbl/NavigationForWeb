@@ -3,11 +3,11 @@
     <h1>イベント一覧</h1>
 
     <div *ngIf="eventList.length==0; else elseBlock">
-      作成したイベントはありません．<span class="new-event" routerLink="/event/new">こちら</span>からイベントを作成しましょう．
+      作成したイベントはありません．<a class="new-event" [routerLink]="['/events/new']">こちら</a>からイベントを作成しましょう．
     </div>
     <ng-template #elseBlock>
       <div class="eventlist">
-        <div class="event-content" *ngFor="let event of eventList; let i = index;" [routerLink]="['/event', event.id]">
+        <div class="event-content" *ngFor="let event of eventList; let i = index;" [routerLink]="['/events', event.id]">
           <div class="event-name">{{event.name}}</div>
           <div class="event-description">
             {{event.description}}

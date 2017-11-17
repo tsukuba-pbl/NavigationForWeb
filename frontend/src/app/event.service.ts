@@ -10,13 +10,17 @@ export class EventService {
   constructor(private http: Http) { }
 
   createEvent(event: EventType): Observable<any> {
-    return this.http.post('/api/event/new', event)
+    return this.http.post('/api/events/new', event)
     .map(this.extractData)
     .catch(this.handleError);
   }
 
   getEventList(): Observable<any> {
-    return this.http.get('/api/event').map(this.extractData).catch(this.handleError)
+    return this.http.get('/api/events').map(this.extractData).catch(this.handleError)
+  }
+
+  getEvent(eventId: string): Observable<EventType> {
+    return this.http.get('/api/events/'+eventId).map(this.extractData).catch(this.handleError)
   }
   
   private extractData(res: Response) {
