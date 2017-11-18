@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatTabsModule } from '@angular/material'
 
 import { HttpModule } from '@angular/http';
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Rx'
 import { EventService } from '../event.service'
 
 describe('EventRegistrationComponent', () => {

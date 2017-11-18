@@ -5,7 +5,7 @@ import { EventDetailComponent } from './event-detail.component'
 
 import { HttpModule } from '@angular/http'
 import { EventService } from '../event.service'
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Rx'
 
 describe('EventDetailComponent', () => {
   let component: EventDetailComponent;
