@@ -5,10 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 
-import { AppComponent } from './app.component';
-import { EventRegistrationComponent } from './event-registration/event-registration.component';
-import { IndexComponent } from './index/index.component';
-
 import { 
   MatIconModule, 
   MatButtonModule, 
@@ -18,6 +14,11 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
 } from '@angular/material';
+
+import { AppComponent } from './app.component'
+import { EventRegistrationComponent } from './event-registration/event-registration.component'
+import { IndexComponent } from './index/index.component'
+import { LocationRegistrationComponent } from './location-registration/location-registration.component'
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -29,7 +30,8 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     EventRegistrationComponent,
-    IndexComponent
+    IndexComponent,
+    LocationRegistrationComponent
   ],
   imports: [
     BrowserModule,
