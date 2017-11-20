@@ -103,7 +103,7 @@ public class EventController {
     @ResponseBody
    	@RequestMapping(value = "/{event_id}/locations", method = RequestMethod.GET)
     public Object getLocation(@PathVariable("event_id") String event_id) {
-    		Map<String, List<Object>> data = new HashMap<>();
+    		Map<String, List<Object>> locationData = new HashMap<>();
     		List<Object> list = new ArrayList<>();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select name, detail from locations where event_id = :event_id";
@@ -111,14 +111,14 @@ public class EventController {
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
 		locations.forEach(location -> {
-			Map<String, String> locationdata = new HashMap<>();
-			locationdata.put("name", location.getName());
-			locationdata.put("detail", location.getDetail());
-			list.add(locationdata);
+			Map<String, String> prepareLocationData = new HashMap<>();
+			prepareLocationData.put("name", location.getName());
+			prepareLocationData.put("detail", location.getDetail());
+			list.add(prepareLocationData);
 		});
 		logger.info("have fetched locations from databases");
-		data.put("locations", list);
-		return data;
+		locationData.put("locations", list);
+		return locationData;
     }
 
 }
