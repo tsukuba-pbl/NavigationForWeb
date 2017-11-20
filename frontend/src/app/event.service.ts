@@ -12,17 +12,17 @@ export class EventService extends ServiceBase {
     super()
   }
 
-  createEvent(event: EventType): Observable<ResponseType> {
+  createEvent(event: EventType): Observable<ResponseData> {
     return this.http.post('/api/events/new', event)
     .map(this.extractData)
     .catch(this.handleError);
   }
 
-  getEventList(): Observable<ResponseType> {
+  getEventList(): Observable<ResponseData> {
     return this.http.get('/api/events').map(this.extractData).catch(this.handleError)
   }
 
-  getEvent(eventId: string): Observable<ResponseType> {
+  getEvent(eventId: string): Observable<ResponseData> {
     return this.http.get('/api/events/'+eventId).map(this.extractData).catch(this.handleError)
   }
 }

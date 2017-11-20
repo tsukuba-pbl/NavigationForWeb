@@ -12,7 +12,7 @@ export class LocationService extends ServiceBase {
     super()
   }
 
-  createLocation(eventId: string, location: LocationType): Observable<ResponseType> {
+  createLocation(eventId: string, location: LocationType): Observable<ResponseData> {
     return this.http.post('/api/events/' + eventId + '/locations/new', location)
     .map(this.extractData)
     .catch(this.handleError);
