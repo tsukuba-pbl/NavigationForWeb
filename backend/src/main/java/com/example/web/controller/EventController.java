@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.EventEntity;
+import com.example.web.entity.LocationEntity;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -94,5 +95,36 @@ public class EventController {
 	            .addValue("end_date", event.getEndDate())
 	            .addValue("user_id", event.getUserId());
 	    return jdbcTemplate.update(sql, param);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/{eventId}/locations/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public Object addLocation(@RequestBody LocationEntity location, @PathVariable("eventId") String eventId) {
+		if (!eventId.equals(location.getEventId())) {
+			logger.error("Don't equal URL eventId and request eventId");
+			return "000";
+		}
+
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		
+		int count = jdbcTemplate.queryForObject("select count(id) from locations where event_id = :event_id and name = :name",
+				new MapSqlParameterSource().addValue("event_id", eventId).addValue("name", location.getName()), Integer.class);
+		
+		if(count > 0) {
+			logger.error("Already added location.");
+			return "100";
+		}
+		
+		String sql = "insert into locations (name, detail, event_id) values (:name, :detail, :event_id)";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("name", location.getName())
+				.addValue("detail", location.getDetail())
+				.addValue("event_id", eventId);
+		int result =  jdbcTemplate.update(sql, param);
+		if (result != 1) {
+			logger.error("failed to insert location");
+			return "101";
+		}
+		return "200";
 	}
 }

@@ -8,8 +8,9 @@ form > * {
 }
 
 .message {
-    margin: 20px;
+    margin: 10px 0;
     color: #d65d5d;
+    text-align: center;
 }
 
 .location {

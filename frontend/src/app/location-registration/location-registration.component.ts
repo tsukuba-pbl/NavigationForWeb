@@ -46,15 +46,18 @@ export class LocationRegistrationComponent implements OnInit {
 
     this.locationService.createLocation(this.eventId, requestBody)
     .subscribe(result => {
+      console.log(result)
       switch(result) {
-        case "200": 
-          this.resultText = "目的地が登録できました"
+        case 100: 
+          this.resultText = "既に同じ目的地が登録されています"
           break;
-        
-        case "404": 
+        case 200: 
+          this.resultText = "目的地が登録できました"
+          this.form.resetForm()
+          break;
+        case 404: 
           this.resultText = "サーバ側に問題が起きたようです😥"
           break;
-        
         default: 
           this.resultText = "問題が発生したようです．．．"
           break;
