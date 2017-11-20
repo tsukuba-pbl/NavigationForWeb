@@ -1,5 +1,6 @@
 package com.example.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,14 +103,21 @@ public class EventController {
     @ResponseBody
    	@RequestMapping(value = "/{event_id}/locations", method = RequestMethod.GET)
     public Object getLocation(@PathVariable("event_id") String event_id) {
-    		Map<String, List<LocationEntity>> data = new HashMap<>();
+    		Map<String, List<Object>> data = new HashMap<>();
+    		List<Object> list = new ArrayList<>();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select name, detail from locations where event_id = :event_id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", event_id);
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
+		locations.forEach(location -> {
+			Map<String, String> locationdata = new HashMap<>();
+			locationdata.put("name", location.getName());
+			locationdata.put("detail", location.getDetail());
+			list.add(locationdata);
+		});
 		logger.info("have fetched locations from databases");
-		data.put("locations", locations);
+		data.put("locations", list);
 		return data;
     }
 
