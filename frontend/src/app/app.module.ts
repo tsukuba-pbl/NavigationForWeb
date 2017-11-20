@@ -13,25 +13,29 @@ import {
   MatInputModule, 
   MatDatepickerModule,
   MatNativeDateModule,
+  MatTabsModule,
 } from '@angular/material';
 
 import { AppComponent } from './app.component'
-import { EventRegistrationComponent } from './event-registration/event-registration.component'
 import { IndexComponent } from './index/index.component'
+import { EventRegistrationComponent } from './event-registration/event-registration.component'
+import { EventDetailComponent } from './event-detail/event-detail.component'
 import { LocationRegistrationComponent } from './location-registration/location-registration.component'
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'event/new',  component: EventRegistrationComponent },
+  { path: 'events/new',  component: EventRegistrationComponent },
+  { path: 'events/:id', component: EventDetailComponent },
+  { path: 'events/:id/location/new', component: LocationRegistrationComponent }
 ];
-
 
 @NgModule({
   declarations: [
     AppComponent,
     EventRegistrationComponent,
     IndexComponent,
-    LocationRegistrationComponent
+    LocationRegistrationComponent,
+    EventDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,7 @@ const routes: Routes = [
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTabsModule,
     RouterModule.forRoot(routes),
   ],
   exports: [

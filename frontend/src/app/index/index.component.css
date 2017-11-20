@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.eventlist {
+    margin: 10px 0;
+}
+
+.event-content:first-child {
+    border-top: 1px solid #b6b6b6;
+}
+
+.event-content {
+    display: block;
+    padding: 10px 20px;
+    border-left: 8px solid #3deb94;
+    border-bottom: 1px solid #b6b6b6;
+    cursor: pointer;
+}
+
+
+.event-content .event-name {
+    font-size: 20px;
+}
+
+.event-content .event-description {
+
+}
+
+.new-event {
+    cursor: pointer;
+    color: #e07d7d;
+}
+
+.event-footer {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
+}
+
+.event-footer .event-start-date {
+}
+
+.event-footer .event-end-date {
+    margin-left: 20px;
+}

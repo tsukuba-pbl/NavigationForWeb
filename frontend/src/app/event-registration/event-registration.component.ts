@@ -15,7 +15,7 @@ export class EventRegistrationComponent implements OnInit {
     eventDescription: new FormControl('', [Validators.required, Validators.pattern("[^ \\t]+[ \\t]*[^ \\t]+|.*[^ \\t]+|[^ \\t]+[ \\t]*")]),
     eventLocation: new FormControl('', [Validators.required, Validators.pattern(".*\\S.*")]),
     eventStartDate: new FormControl('', Validators.required),
-    eventEndDate: new FormControl('', Validators.required)
+    eventEndDate: new FormControl('', Validators.required),
   })
   @ViewChild('f') form
   errorMessage: string = ""
@@ -84,5 +84,4 @@ export class EventRegistrationComponent implements OnInit {
       return 0
     }
   }
-
 }

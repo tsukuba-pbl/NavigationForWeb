@@ -1,6 +1,11 @@
 package com.example.web.entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.Date;
+
+import org.springframework.jdbc.core.RowMapper;
 
 import com.example.web.CustomDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,7 +13,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
 @Data
-public class EventEntity {
+public class EventEntity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
 	private String description;
@@ -18,6 +27,15 @@ public class EventEntity {
 	@JsonDeserialize(using = CustomDeserializer.DateDeserializer.class)
 	private Date endDate;
 	private String userId;
-	private Date created_at;
-	private Date updated_at;
+	private Date createdAt;
+	private Date updatedAt;
+	
+	public class EventRowMapper implements RowMapper<EventEntity> {
+
+		@Override
+		public EventEntity mapRow(ResultSet arg0, int arg1) throws SQLException {
+			return null;
+		}
+		
+	}
 }

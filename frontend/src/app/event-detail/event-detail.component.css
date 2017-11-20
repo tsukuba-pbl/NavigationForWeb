@@ -1,0 +1,14 @@
+.event-info {
+    
+}
+
+.event-row h2 {
+    padding: 4px 12px;
+    font-size: 20px;
+    border-left: 3px solid #01ad10;
+}
+
+.event-row .event-content {
+    margin-left: 40px;
+    font-size: 18px;
+}

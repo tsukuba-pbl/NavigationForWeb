@@ -34,6 +34,12 @@ services:
     command: sh -c "./mvnw clean && ./mvnw -Plocal spring-boot:run -Drun.profiles=local"
     links: 
       - mysql
+      - redis
+
+  redis:
+    image: redis:3.2.9
+    ports:
+      - 6379:6379
 
   mysql-data:
     image: busybox
@@ -54,6 +60,9 @@ services:
       - "3306:3306"
     expose:
       - "3306"
+    volumes:
+      - ./mysql/my.conf:/etc/mysql/my.conf
+      - ./mysql/log:/var/log/mysql
     container_name: mysql-db
     volumes_from:
       - mysql-data
