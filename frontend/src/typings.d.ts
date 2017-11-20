@@ -22,3 +22,9 @@ type LocationType = {
   detail: string,
   eventId: string,
 }
+
+type ResponseType = {
+  status: number,
+  message: string,
+  data: any
+}

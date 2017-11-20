@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.EventEntity;
 import com.example.web.entity.LocationEntity;
+import com.example.web.entity.ResponseEntity;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -39,18 +40,23 @@ public class EventController {
   
     @ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.GET)
-    public List<EventEntity> index() {
+    public Object index() {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events";
 		logger.info("will fetch event list from databases");
 		List<EventEntity> eventList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event list from databases");
-		return eventList;
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to fetch event list")
+				.data(eventList)
+				.build();
     }
     
     @ResponseBody
    	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("id") String id) {
+    public Object getEvent(@PathVariable("id") String id) {
     		EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events where id = :id";
@@ -61,12 +67,17 @@ public class EventController {
 		if (!event.isEmpty()) {
 			resultEvent = event.get(0);
 		}
-		return resultEvent;
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to fetch event")
+				.data(resultEvent)
+				.build();
     }
     
 	@ResponseBody
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public int add(@RequestBody EventEntity event) {
+	public Object add(@RequestBody EventEntity event) {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String eventId = "";
 		int tryCount = 0;
@@ -79,7 +90,11 @@ public class EventController {
 				break;
 			}
 			if(tryCount > 3) {
-				return -1;
+				return ResponseEntity.builder()
+						.status(400)
+						.message("something wrong")
+						.data(null)
+						.build();
 			}
 		}
 		
@@ -94,7 +109,21 @@ public class EventController {
 	            .addValue("start_date", event.getStartDate())
 	            .addValue("end_date", event.getEndDate())
 	            .addValue("user_id", event.getUserId());
-	    return jdbcTemplate.update(sql, param);
+	    int result =  jdbcTemplate.update(sql, param);
+	    
+	    if (result != 1) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert event")
+					.data(null)
+					.build();
+	    }
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to insert event")
+				.data(null)
+				.build();
 	}
 	
 	@ResponseBody
@@ -102,7 +131,11 @@ public class EventController {
 	public Object addLocation(@RequestBody LocationEntity location, @PathVariable("eventId") String eventId) {
 		if (!eventId.equals(location.getEventId())) {
 			logger.error("Don't equal URL eventId and request eventId");
-			return "000";
+			return ResponseEntity.builder()
+					.status(400)
+					.message("something wrong")
+					.data(null)
+					.build();
 		}
 
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -112,7 +145,11 @@ public class EventController {
 		
 		if(count > 0) {
 			logger.error("Already added location.");
-			return "100";
+			return ResponseEntity.builder()
+					.status(300)
+					.message("already added location")
+					.data(null)
+					.build();
 		}
 		
 		String sql = "insert into locations (name, detail, event_id) values (:name, :detail, :event_id)";
@@ -123,8 +160,17 @@ public class EventController {
 		int result =  jdbcTemplate.update(sql, param);
 		if (result != 1) {
 			logger.error("failed to insert location");
-			return "101";
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert location")
+					.data(null)
+					.build();
 		}
-		return "200";
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to insert location")
+				.data(null)
+				.build();
 	}
 }
