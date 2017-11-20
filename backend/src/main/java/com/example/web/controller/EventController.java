@@ -98,18 +98,18 @@ public class EventController {
     
     @ResponseBody
    	@RequestMapping(value = "/{id}/locations", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("id") String id) {
-    	EventEntity resultEvent = new EventEntity();
+    public LocationEntity getEvent(@PathVariable("id") String id) {
+		LocationEntity resultlocations = new LocationEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from locations where event_id = :id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", id);
-		logger.info("will fetch event from databases");
-		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
-		logger.info("have fetched event from databases");
-		if (!event.isEmpty()) {
-			resultEvent = event;
+		logger.info("will fetch locations from databases");
+		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
+		logger.info("have fetched locations from databases");
+		if (!locations.isEmpty()) {
+			resultlocations = locations;
 		}
-		return resultEvent;
+		return resultlocations;
     }
 
 }
