@@ -1,11 +1,11 @@
 <!-- header -->
 <mat-toolbar color="primary">
-  <a mat-button routerLink="/"><h1>Navient</h1></a>
+  <a mat-button [routerLink]="['/']"><h1>Navient</h1></a>
 
   <!-- This fills the remaining space of the current row -->
   <span class="fill-remaining-space"></span>
 
-  <a mat-icon-button routerLink="/event/new"><mat-icon>add</mat-icon></a>
+  <a mat-icon-button [routerLink]="['/events/new']"><mat-icon>add</mat-icon></a>
 </mat-toolbar>
 
 <router-outlet></router-outlet>

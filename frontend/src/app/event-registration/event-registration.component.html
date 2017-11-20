@@ -1,5 +1,6 @@
 <div class="page">
   <div class="container">
+    <h1>イベントの登録</h1>
     <form class="event-register-form" [formGroup]="eventForm" #f="ngForm" (ngSubmit)="onSubmit(eventForm)">
       <mat-form-field>
         <input type="text" matInput placeholder="Event Name" [formControl]="eventForm.controls['eventName']">
@@ -35,12 +36,12 @@
             Event End Date is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      
+
+      <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
+
       <div class="error-msg">
         {{errorMessage}}
       </div>
-
-      <button type="submit" color="primary" mat-raised-button [disabled]="!eventForm.valid">イベントの登録</button>
     </form>
     <div class="result-status">
       {{resultText}}
