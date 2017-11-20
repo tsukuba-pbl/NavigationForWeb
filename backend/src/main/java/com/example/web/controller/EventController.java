@@ -1,6 +1,8 @@
 package com.example.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.EventEntity;
+import com.example.web.entity.LocationEntity;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -98,18 +101,16 @@ public class EventController {
     
     @ResponseBody
    	@RequestMapping(value = "/{event_id}/locations", method = RequestMethod.GET)
-    public LocationEntity getLocation(@PathVariable("event_id") String event_id) {
-		LocationEntity resultlocations = new LocationEntity();
+    public Object getLocation(@PathVariable("event_id") String event_id) {
+    		Map<String, List<LocationEntity>> data = new HashMap<>();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select * from locations where event_id = :event_id";
+		String sql = "select name, detail from locations where event_id = :event_id";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", event_id);
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
 		logger.info("have fetched locations from databases");
-		if (!locations.isEmpty()) {
-			resultlocations = locations;
-		}
-		return resultlocations;
+		data.put("locations", locations);
+		return data;
     }
 
 }
