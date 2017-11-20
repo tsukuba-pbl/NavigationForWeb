@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatTabsModule } from '@angular/material'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs/Rx'
 
 import { LocationService } from '../location.service'
 
-describe('LocationComponent', () => {
+describe('LocationRegistrationComponent', () => {
   let component: LocationRegistrationComponent;
   let fixture: ComponentFixture<LocationRegistrationComponent>;
   
@@ -30,6 +31,7 @@ describe('LocationComponent', () => {
         MatDatepickerModule,
         MatNativeDateModule,
         MatTabsModule,
+        RouterTestingModule,
       ],
       providers: [
         {provide: LocationService, useValue: locationServiceMock}

@@ -5,6 +5,7 @@ import { LocationService } from './location.service';
 describe('LocationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpModule],
       providers: [LocationService]
     });
   });
