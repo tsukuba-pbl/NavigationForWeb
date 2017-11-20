@@ -48,12 +48,12 @@ public class EventController {
     }
     
     @ResponseBody
-   	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("id") String id) {
+   	@RequestMapping(value = "/{event_id}", method = RequestMethod.GET)
+    public EventEntity getEvent(@PathVariable("event_id") String id) {
     		EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select * from events where id = :id";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		String sql = "select * from events where id = :event_id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", id);
 		logger.info("will fetch event from databases");
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
@@ -97,12 +97,12 @@ public class EventController {
 	}
     
     @ResponseBody
-   	@RequestMapping(value = "/{id}/locations", method = RequestMethod.GET)
-    public LocationEntity getEvent(@PathVariable("id") String id) {
+   	@RequestMapping(value = "/{event_id}/locations", method = RequestMethod.GET)
+    public LocationEntity getLocation(@PathVariable("event_id") String event_id) {
 		LocationEntity resultlocations = new LocationEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select * from locations where event_id = :id";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", id);
+		String sql = "select * from locations where event_id = :event_id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", event_id);
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
 		logger.info("have fetched locations from databases");
