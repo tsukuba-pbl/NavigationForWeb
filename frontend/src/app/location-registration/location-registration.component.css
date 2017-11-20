@@ -1,0 +1,42 @@
+.container {
+	display: flex;
+    flex-direction: column;
+}
+
+form > * {
+	width: 100%;
+}
+
+.message {
+    margin: 20px;
+    color: #d65d5d;
+}
+
+.location {
+    display: flex;
+    justify-content: center;
+}
+
+.location-name {
+    width: 30%;
+    padding-right: 20px; 
+}
+
+.location-detail {
+    width: 70%;
+}
+
+/* スマホの場合の設定 */
+@media screen and (max-width: 480px) {
+    .location {
+        display: block;
+    }
+
+    .location-name {
+        width: 100%;
+    }
+
+    .location-detail {
+        width: 100%;
+    }
+}

@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'events/new',  component: EventRegistrationComponent },
   { path: 'events/:id', component: EventDetailComponent },
-  { path: 'events/:id/location/new', component: LocationRegistrationComponent }
+  { path: 'events/:id/locations/new', component: LocationRegistrationComponent }
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { FormGroup, FormControl, Validators } from '@angular/forms'
 
 import { EventService } from '../event.service'
 
@@ -50,7 +50,9 @@ export class EventRegistrationComponent implements OnInit {
       location: requestParams.eventLocation.trim(),
       startDate: requestParams.eventStartDate,
       endDate: requestParams.eventEndDate,
-      userId: "aiueo"
+      userId: "aiueo",
+      createdAt: null,
+      updatedAt: null,
     }
 
     this.eventService.createEvent(requestBody)

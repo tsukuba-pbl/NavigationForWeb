@@ -12,4 +12,13 @@ type EventType = {
   startDate: Date,
   endDate: Date,
   userId: string,
+  createdAt: Date,
+  updatedAt: Date,
+}
+
+type LocationType = {
+  id: number,
+  name: string,
+  detail: string,
+  eventId: string,
 }
