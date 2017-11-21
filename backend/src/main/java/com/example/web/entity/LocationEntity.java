@@ -1,7 +1,6 @@
 package com.example.web.entity;
 
 import java.io.Serializable;
-
 import lombok.Data;
 
 @Data
