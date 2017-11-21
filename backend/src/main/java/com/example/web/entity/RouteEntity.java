@@ -6,6 +6,9 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import lombok.Data;
+
+@Data
 public class RouteEntity implements Serializable {
 	/**
 	 * 
