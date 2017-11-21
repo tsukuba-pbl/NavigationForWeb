@@ -1,1 +1,1 @@
-alter table mesurements rename to area;
+alter table measurements rename to area;
