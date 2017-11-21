@@ -17,7 +17,13 @@ export class IndexComponent implements OnInit {
     // イベント情報の取得
     this.eventService.getEventList()
     .subscribe(result => {
-      this.eventList = result
+      switch(result.status) {
+        case 200: 
+          this.eventList = result.data
+          break;
+        default: 
+          break;
+      }
     })
   }
 

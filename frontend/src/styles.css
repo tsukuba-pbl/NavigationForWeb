@@ -6,5 +6,21 @@ html, body {
 }
 
 .page {
-	margin: 10px 20px;
+    margin: 10px 20px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+    border-left: 5px solid #4043e6;
+    padding-left: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    border-left: 3px solid #4043e6;
+    padding-left: 10px;
 }

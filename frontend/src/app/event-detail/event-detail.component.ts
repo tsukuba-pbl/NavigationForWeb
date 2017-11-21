@@ -20,8 +20,14 @@ export class EventDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.eventId = params["id"]
-      this.eventService.getEvent(this.eventId).subscribe(event => {
-        this.event = event
+      this.eventService.getEvent(this.eventId).subscribe(result => {
+        switch(result.status) {
+          case 200: 
+          this.event = result.data
+            break;
+          default: 
+            break;
+        }
       })
     })
   }

@@ -1,0 +1,36 @@
+<div class="page">
+  <div class="container">
+    <h1>目的地の管理</h1>
+
+    <h2>登録されている目的地一覧</h2>
+    <div>
+      <ul >
+        <li>
+          会場A
+        </li>
+      </ul>
+    </div>
+
+    <h2>目的地の登録</h2>
+    <form [formGroup]="locationForm" #f="ngForm" (ngSubmit)="onSubmit(locationForm)">
+      <div class="location">
+        <mat-form-field class="location-name">
+          <input type="text" matInput placeholder="Location Name" [formControl]="locationForm.controls['locationName']">
+          <mat-error *ngIf="!locationForm.controls['locationName'].valid">
+            Location Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="location-detail">
+          <input type="text" matInput placeholder="Location Detail" [formControl]="locationForm.controls['locationDetail']">
+          <mat-error *ngIf="!locationForm.controls['locationDetail'].valid">
+            Location Detail is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!locationForm.valid">目的地の登録</button>
+      <div class="message">
+        {{resultText}}
+      </div>
+    </form>
+  </div>
+</div>

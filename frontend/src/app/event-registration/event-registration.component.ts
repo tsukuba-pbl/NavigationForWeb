@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { FormGroup, FormControl, Validators } from '@angular/forms'
 
 import { EventService } from '../event.service'
 
@@ -50,19 +50,26 @@ export class EventRegistrationComponent implements OnInit {
       location: requestParams.eventLocation.trim(),
       startDate: requestParams.eventStartDate,
       endDate: requestParams.eventEndDate,
-      userId: "aiueo"
+      userId: "aiueo",
+      createdAt: null,
+      updatedAt: null,
     }
 
     this.eventService.createEvent(requestBody)
-    .subscribe(
-      result => {
-        if(result == 1) {
+    .subscribe(result => {
+      switch(result.status) {
+        case 200: 
           this.resultText = "イベントを登録できました"
           this.form.resetForm()
-        } else {
-          this.resultText = "イベントを登録に失敗しました"
-        }
-      },
+          break;
+        case 300: 
+          this.resultText = "既に同じ目的地が登録されています"
+          break;
+        default: 
+          this.resultText = "問題が発生したようです😥．．．"
+          break;
+      }
+    },
       error => this.errorMessage = <any>error
     );
   }
