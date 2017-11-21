@@ -183,7 +183,7 @@ public class EventController {
     		Map<String, List<Object>> locationData = new HashMap<>();
     		List<Object> list = new ArrayList<>();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select name, detail from locations where eventId = :eventId";
+		String sql = "select name, detail from locations where event_id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
