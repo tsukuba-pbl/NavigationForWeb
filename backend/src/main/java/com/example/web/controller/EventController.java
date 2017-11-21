@@ -52,12 +52,12 @@ public class EventController {
     }
     
     @ResponseBody
-   	@RequestMapping(value = "/{event_id}", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("event_id") String id) {
+   	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
+    public EventEntity getEvent(@PathVariable("eventId") String id) {
     		EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select * from events where id = :event_id";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", id);
+		String sql = "select * from events where id = :eventId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", id);
 		logger.info("will fetch event from databases");
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
@@ -101,13 +101,13 @@ public class EventController {
 	}
     
     @ResponseBody
-   	@RequestMapping(value = "/{event_id}/locations", method = RequestMethod.GET)
-    public Object getLocation(@PathVariable("event_id") String event_id) {
+   	@RequestMapping(value = "/{eventId}/locations", method = RequestMethod.GET)
+    public Object getLocation(@PathVariable("eventId") String eventId) {
     		Map<String, List<Object>> locationData = new HashMap<>();
     		List<Object> list = new ArrayList<>();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select name, detail from locations where event_id = :event_id";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("event_id", event_id);
+		String sql = "select name, detail from locations where eventId = :eventId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
 		logger.info("will fetch locations from databases");
 		List<LocationEntity> locations = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(LocationEntity.class));
 		locations.forEach(location -> {
