@@ -59,8 +59,8 @@ public class EventController {
     
     @ResponseBody
    	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
-    public EventEntity getEvent(@PathVariable("eventId") String id) {
-    		EventEntity resultEvent = new EventEntity();
+    public Object getEvent(@PathVariable("eventId") String id) {
+    	EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events where id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", id);
