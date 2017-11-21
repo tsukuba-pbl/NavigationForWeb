@@ -56,11 +56,37 @@ public class RouteController {
 		logger.info("will fetch navigation from databases");
 		List<NavigationEntity> navigation = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(NavigationEntity.class));
 		if(navigation.isEmpty()) {
-			return ResponseEntity.builder()
-					.status(400)
-					.message("failed to fetch navigation")
-					.data(null)
-					.build();
+			// 対象のルートがない場合は逆パターンも試す．
+			sql = "select area.path_id as area_id, area.degree as rotate_degree, area.is_start, area.is_goal, area.is_road, area.is_crossroad, area.train_data as beacons, area.around_info, area.navigation_text"
+					+ " from area join (\n" + 
+					"    select routes.id from routes join (\n" + 
+					"        select sourcelocation.id as source_id, sourcelocation.name as source_name, destinationlocation.id as destination_id, destinationlocation.name as destination_name from \n" + 
+					"            (select * from locations where event_id=:eventId and name=:departure) as sourcelocation,\n" + 
+					"            (select * from locations where event_id=:eventId and name=:destination) as destinationlocation\n" + 
+					"    ) as locations on routes.source_id = locations.source_id and routes.destination_id = locations.destination_id\n" + 
+					") as routes on routes.id = area.route_id order by area.id desc";
+			param = new MapSqlParameterSource().addValue("eventId", eventId)
+											.addValue("departure", destination)
+											.addValue("destination", departure);
+			logger.info("will fetch navigation from databases");
+			navigation = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(NavigationEntity.class));
+			if(navigation.isEmpty()) {
+				// 逆パターンもない場合は，残念
+				return ResponseEntity.builder()
+						.status(400)
+						.message("failed to fetch navigation")
+						.data(null)
+						.build();
+			}
+			// データの修正
+			NavigationEntity first = navigation.get(0);
+			first.setIsGoal(0);
+			first.setIsStart(1);
+			navigation.set(0, first);
+			NavigationEntity end = navigation.get(navigation.size()-1);
+			end.setIsGoal(1);
+			end.setIsStart(0);
+			navigation.set(navigation.size()-1, end);
 		}
 		logger.info("have fetched event list from databases");
 		Map<String, List<NavigationEntity>> response = new HashMap<>();
