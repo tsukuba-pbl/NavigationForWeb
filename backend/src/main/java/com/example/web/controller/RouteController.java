@@ -1,9 +1,7 @@
 package com.example.web.controller;
 
-<<<<<<< HEAD
-=======
+
 import java.io.IOException;
->>>>>>> master
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,19 +9,21 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-<<<<<<< HEAD
-import com.example.web.entity.EventEntity;
-import com.example.web.entity.LocationEntity;
-import com.example.web.entity.ResponseEntity;
-import com.example.web.entity.RouteEntity;
-=======
 import com.example.web.entity.BeaconEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
@@ -31,33 +31,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
->>>>>>> master
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 @Controller
-@RequestMapping("api/routes/")
+@RequestMapping("/api/routes")
 public class RouteController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(EventController.class);
-	
-	@Autowired
+
+    @Autowired
     private DataSource dataSource;
-<<<<<<< HEAD
-	
-	@ResponseBody
-	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object postRoute(@PathVariable("eventId") String eventId, @RequestBody String json) {
-=======
     
     private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
     
@@ -146,15 +127,12 @@ public class RouteController {
 		});
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
->>>>>>> master
 		
-		logger.info(json);
-
-		return ResponseEntity.builder()
-				.status(200)
-				.message("success to insert route information")
-				.data(null)
-				.build();
+    		return ResponseEntity.builder()
+					.status(200)
+					.message("success to fetch navigation")
+					.data(response)
+					.build();
     }
 	
 //	@ResponseBody
