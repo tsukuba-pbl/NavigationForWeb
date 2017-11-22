@@ -67,10 +67,15 @@ public class EventController {
 		logger.info("will fetch event from databases");
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
-		if (!event.isEmpty()) {
-			resultEvent = event.get(0);
+		if (event.isEmpty()) {
+			logger.error("have not event from databases");
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to fetch event")
+					.data(null)
+					.build();
 		}
-
+		resultEvent = event.get(0);
 		return ResponseEntity.builder()
 				.status(200)
 				.message("success to fetch event")
