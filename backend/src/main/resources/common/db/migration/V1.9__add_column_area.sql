@@ -1,1 +1,1 @@
-alter table area add navigation_text text;
+alter table area add navigation_text text not null default '';
