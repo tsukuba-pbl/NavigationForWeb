@@ -1,5 +1,7 @@
 package com.example.web.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.web.entity.BeaconEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -78,6 +85,7 @@ public class RouteController {
 						.data(null)
 						.build();
 			}
+			
 			// データの修正
 			NavigationEntity first = navigation.get(0);
 			first.setIsGoal(0);
@@ -89,8 +97,35 @@ public class RouteController {
 			navigation.set(navigation.size()-1, end);
 		}
 		logger.info("have fetched event list from databases");
-		Map<String, List<NavigationEntity>> response = new HashMap<>();
-		response.put("routes", navigation);
+		List<Object> list = new ArrayList<>();
+		navigation.forEach(data -> {
+			Map<String, Object> entity = new HashMap<>();
+			entity.put("areaId", data.getAreaId());
+			entity.put("rotateDegree", data.getRotateDegree());
+			entity.put("isStart", data.getIsStart());
+			entity.put("isGoal", data.getIsGoal());
+			entity.put("isRoad", data.getIsRoad());
+			entity.put("isCrossroad", data.getIsCrossroad());
+			entity.put("navigationText", data.getNavigationText());
+			entity.put("aroundInfo", data.getAroundInfo());
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				List<BeaconEntity[]> beaconList = mapper.readValue(data.getBeacons(), new TypeReference<List<BeaconEntity[]>>() {});
+				entity.put("beacons", beaconList);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+				logger.error(e.toString());
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+				logger.error(e.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.error(e.toString());
+			}
+			list.add(entity);
+		});
+		Map<String, List<Object>> response = new HashMap<>();
+		response.put("routes", list);
 		
     		return ResponseEntity.builder()
 					.status(200)
