@@ -113,13 +113,10 @@ public class RouteController {
 				List<BeaconEntity[]> beaconList = mapper.readValue(data.getBeacons(), new TypeReference<List<BeaconEntity[]>>() {});
 				entity.put("beacons", beaconList);
 			} catch (JsonParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			list.add(entity);
