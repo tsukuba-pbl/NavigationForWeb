@@ -114,10 +114,13 @@ public class RouteController {
 				entity.put("beacons", beaconList);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (JsonMappingException e) {
 				e.printStackTrace();
+				logger.error(e.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
+				logger.error(e.toString());
 			}
 			list.add(entity);
 		});
