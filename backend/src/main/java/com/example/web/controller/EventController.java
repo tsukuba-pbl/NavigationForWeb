@@ -60,7 +60,6 @@ public class EventController {
     @ResponseBody
    	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object getEvent(@PathVariable("eventId") String id) {
-    	EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events where id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", id);
@@ -75,11 +74,10 @@ public class EventController {
 					.data(null)
 					.build();
 		}
-		resultEvent = event.get(0);
 		return ResponseEntity.builder()
 				.status(200)
 				.message("success to fetch event")
-				.data(resultEvent)
+				.data(event.get(0))
 				.build();
     }
     
