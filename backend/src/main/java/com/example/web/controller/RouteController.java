@@ -13,12 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.web.entity.BeaconEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
+import com.example.web.entity.RouteEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -135,34 +138,50 @@ public class RouteController {
 					.build();
     }
 	
-//	@ResponseBody
-//	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-//	public Object postRoute(@PathVariable("eventId") String eventId, @RequestBody RouteEntity route) {
-//		//イベントID
-//		route.setEventId(eventId);
-//		//データベースへの格納
-//		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-//		String sql = "insert into routes (source_id, destination_id, event_id) "
-//				+ "values (:source_id, :destination_id, :event_id))";
-//		SqlParameterSource param = new MapSqlParameterSource()
-//				.addValue("source_id", route.getSourceId())
-//				.addValue("destination_id", route.getDestinationId())
-//				.addValue("event_id", route.getEventId());
-//		int result = jdbcTemplate.update(sql, param);
+	@ResponseBody
+	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public Object postRoute(@PathVariable("eventId") String eventId, @RequestBody RouteEntity route) {
+		//イベントID
+		route.setEventId(eventId);
+		//データベースへの格納
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		//routesの部分の格納
+		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
+				+ "values (:source_id, :destination_id, :event_id))";
+		SqlParameterSource param_routes = new MapSqlParameterSource()
+				.addValue("source_id", route.getSourceId())
+				.addValue("destination_id", route.getDestinationId())
+				.addValue("event_id", route.getEventId());
+		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
 //		
-//		if (result != 1) {
-//			return ResponseEntity.builder()
-//					.status(400)
-//					.message("failed to insert route information")
-//					.data(null)
-//					.build();
-//	    }
-//
-//		return ResponseEntity.builder()
-//				.status(200)
-//				.message("success to insert route information")
-//				.data(null)
-//				.build();
-//    }
+//		エリア数の分繰り返しのSQL
+//		String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
+//				+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
+//		SqlParameterSource param_areas = new MapSqlParameterSource()
+//				.addValue("route_id", route.getId())
+//				.addValue("path_id", areas.getareaId())
+//				.addValue("degree", areas.rotateDegree())
+//				.addValue("is_start", areas.isStart())
+//				.addValue("is_goal", areas.isGoal())
+//				.addValue("is_crossroad", areas.isCrossroad())
+//				.addValue("train_data", areas.trainData())
+//				.addValue("around_info", areas.aroundInfo())
+//				.addValue("navigation_text", areas.navigationText());
+//		int result_areas = jdbcTemplate.update(sql_areas, param_areas);
+		
+		if (result_routes != 1 || result_areas != 1) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert route information")
+					.data(null)
+					.build();
+	    }
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to insert route information")
+				.data(null)
+				.build();
+    }
 	
 }
