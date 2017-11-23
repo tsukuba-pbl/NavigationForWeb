@@ -50,11 +50,45 @@ public class TrainController {
 		Area areas[] = data.getAreas();
 		
 		logger.info("---------------------------");
-		logger.info("eventId = " + eventId + "¥n");
+		logger.info("eventId = " + eventId);
 		logger.info("---------------------------");
-		logger.info("sourceName = " + sourceName + "¥n");
+		logger.info("sourceName = " + sourceName);
 		logger.info("---------------------------");
-		logger.info("destinationName = " + destinationName + "¥n");
+		logger.info("destinationName = " + destinationName);
+		
+		//エリアオブジェクトを抽出
+		for(Area area: areas) {
+			int routeId = (int)area.getRouteId();
+			int isStart = (int)area.getIsStart();
+			int isGoal = (int)area.getIsGoal();
+			int isCrossroad = (int)area.getIsCrossroad();
+			String navigationText = area.getNavigation();
+			int rotateDegree = (int)area.getRotateDegree();
+			
+			logger.info("===============================");
+			logger.info("routeId = " + routeId);
+			logger.info("isStart = " + isStart);
+			logger.info("isGoal = " + isGoal);
+			logger.info("isCrossroad = " + isCrossroad);
+			logger.info("navigationText = " + navigationText);
+			logger.info("rotateDegree = " + rotateDegree);
+			
+			logger.info("---------------------------");
+			
+			Beacon trainDataList[][] = area.getBeacons();
+			//trainDataList = "Beacons":[ [ .... ] ]
+			for(Beacon trainData[] : trainDataList) {
+				//trainData = [ {minor: , rssi: },{.....},{.....}, ..... ]
+				for(Beacon beacon: trainData) {
+					//beacon = {minor: , rssi: }
+					int minor = (int)beacon.getMinorId();
+					int rssi = (int)beacon.getRssi();
+					logger.info("[" + minor + "," + rssi + "],");
+				}
+			}
+			logger.info("===============================");
+		}
+
 		
 		return ResponseEntity.builder()
 				.status(200)
