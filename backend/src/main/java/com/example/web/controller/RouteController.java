@@ -154,25 +154,31 @@ public class RouteController {
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		logger.info("データベースへの格納");
-		//source_idをStringからIntに
+		//source_idをlocationsテーブルから取得
 		String sql_sourceid = "select id from locations where name = :source_id";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
 				.addValue("source_id", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
-		logger.info("source_id");
-		//destination_idをStringからIntに
+		logger.info("sourceId="+sourceId);
+		
+		//destination_idをlocationsテーブルから取得
 		String sql_destinationid = "select id from locations where name = :destination_id";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
 				.addValue("destination_id", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
-		logger.info("destination_id");
+		logger.info("destinationId="+destinationId);
+		logger.info("EventId="+data.getEventId());
+		
 		//routesテーブルへ格納
 		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
-				+ "values (:source_id, :destination_id, :event_id))";
+				+ "values (:source_id, :destination_id, :event_id)";
 		SqlParameterSource param_routes = new MapSqlParameterSource()
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId)
 				.addValue("event_id", data.getEventId());
+		logger.info("source_id="+sourceId);
+		logger.info("destination_id="+destinationId);
+		logger.info("event_id="+data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
 		logger.info("routesテーブルへ挿入成功");
 		
