@@ -182,15 +182,15 @@ public class RouteController {
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
 		logger.info("routesテーブルへ挿入成功");
 		
-		//route_idの取得
+		//areaテーブルで必要となる外部キーroute_idの取得
 		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
 		SqlParameterSource params_id = new MapSqlParameterSource()
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId);
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
 		
-		//areas挿入
-		int result_areas = 1;
+		//areaテーブルへの格納
+		int result_areas = 1; //エラコード用でとりあえず変数を用意している
 		for (Area area: areas) {
 			String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
 					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
@@ -221,6 +221,7 @@ public class RouteController {
 				.build();
     }
 	
+	//Int型をBoolean型に変換する
 	private Boolean myIntToBoolean(int n) {
 		// 0: false
 		// 1: true
