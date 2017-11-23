@@ -144,7 +144,7 @@ public class RouteController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) {
+	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
 		//jsonのパース
 		GettingStarted data = Converter.fromJsonString(receiveRouteJson);
 		
@@ -170,6 +170,7 @@ public class RouteController {
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
 		
 		//areas挿入
+		int result_areas = 1;
 		for (Area area: areas) {
 			String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
 					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
@@ -180,10 +181,10 @@ public class RouteController {
 					.addValue("is_start", myIntToBoolean((int)area.getIsStart()))
 					.addValue("is_goal", myIntToBoolean((int)area.getIsGoal()))
 					.addValue("is_crossroad", myIntToBoolean((int)area.getIsCrossroad()))
-					.addValue("train_data", area.trainData())
+					.addValue("train_data", getTrainDataAsJson(area.getBeacons()))
 					.addValue("around_info", null)
 					.addValue("navigation_text", area.getNavigation());
-			int result_areas = jdbcTemplate.update(sql_areas, param_areas);
+			result_areas = jdbcTemplate.update(sql_areas, param_areas);
 		}
 		if (result_routes != 1 || result_areas != 1) {
 			return ResponseEntity.builder()
@@ -208,4 +209,30 @@ public class RouteController {
 		}
 		return true;
 	}
+	
+	//電波強度のトレーニングデータの部分をJSON形式に変換する
+		private String getTrainDataAsJson(Beacon[][] trainDataList) {
+			String jsonString = "";
+			
+			jsonString = "[";
+			for(int i = 0; i < trainDataList.length; i++) {
+				jsonString += "[";
+				for(int j = 0; j < trainDataList[i].length; j++) {
+					int minor = (int)trainDataList[i][j].getMinorId();
+					int rssi = (int)trainDataList[i][j].getRssi();
+					logger.info("[" + minor + "," + rssi + "],");
+					jsonString += "{" + "minor : " + minor + "," + "rssi" + ":" + rssi + "}";
+					if(j < trainDataList[i].length - 1) {
+						jsonString += ",";
+					}
+				}
+				jsonString += "]";
+				if(i < trainDataList.length - 1) {
+					jsonString += ",";
+				}
+			}
+			jsonString += "]";
+			
+			return jsonString;
+		}
 }
