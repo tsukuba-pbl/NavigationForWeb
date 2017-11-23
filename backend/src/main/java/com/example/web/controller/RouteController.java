@@ -145,6 +145,7 @@ public class RouteController {
 	@ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
+		logger.info("ルートデータがpostされてきた");
 		//jsonのパース
 		GettingStarted data = Converter.fromJsonString(receiveRouteJson);
 		
@@ -152,19 +153,19 @@ public class RouteController {
 
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		
+		logger.info("データベースへの格納");
 		//source_idをStringからIntに
-		String sql_sourceid = "select id form locations where source_id = :source_id";
+		String sql_sourceid = "select id from locations where name = :source_id";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
 				.addValue("source_id", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
-		
+		logger.info("source_id");
 		//destination_idをStringからIntに
-		String sql_destinationid = "select id form locations where destination_id = :destination_id";
+		String sql_destinationid = "select id from locations where name = :destination_id";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
 				.addValue("destination_id", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
-		
+		logger.info("destination_id");
 		//routesテーブルへ格納
 		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
 				+ "values (:source_id, :destination_id, :event_id))";
@@ -173,6 +174,7 @@ public class RouteController {
 				.addValue("destination_id", destinationId)
 				.addValue("event_id", data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
+		logger.info("routesテーブルへ挿入成功");
 		
 		//route_idの取得
 		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
