@@ -15,7 +15,8 @@ describe('LocationRegistrationComponent', () => {
   let fixture: ComponentFixture<LocationRegistrationComponent>;
   
   const locationServiceMock = {
-    addLocation: () => Observable.create(new Object()).map(data =>JSON.stringify(data))
+    addLocation: () => Observable.create(new Object()).map(data =>JSON.stringify(data)),
+    getLocations: () => Observable.create(new Object()).map(data =>JSON.stringify(data))
   }
 
   beforeEach(async(() => {

@@ -18,7 +18,7 @@ export class LocationService extends ServiceBase {
     .catch(this.handleError);
   }
 
-  getEvent(eventId: string): Observable<EventType> {
+  getLocations(eventId: string): Observable<EventType> {
     return this.http.get('/api/events/' + eventId + '/locations').map(this.extractData).catch(this.handleError)
   }
 }
