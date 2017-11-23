@@ -2,6 +2,7 @@ package com.example.web.controller;
 
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -34,6 +36,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mypack.parse.navigationdata.*;
 
 
 @Controller
@@ -140,35 +144,47 @@ public class RouteController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object postRoute(@PathVariable("eventId") String eventId, @RequestBody RouteEntity route) {
-		//イベントID
-		route.setEventId(eventId);
+	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) {
+		//jsonのパース
+		GettingStarted data = Converter.fromJsonString(receiveRouteJson);
+		
+		Area areas[] = data.getAreas();
+
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		
 		//routesの部分の格納
 		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
 				+ "values (:source_id, :destination_id, :event_id))";
 		SqlParameterSource param_routes = new MapSqlParameterSource()
-				.addValue("source_id", route.getSourceId())
-				.addValue("destination_id", route.getDestinationId())
-				.addValue("event_id", route.getEventId());
+				.addValue("source_id", data.getSourceName())
+				.addValue("destination_id", data.getDestinationName())
+				.addValue("event_id", data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
-//		
-//		エリア数の分繰り返しのSQL
-//		String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
-//				+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
-//		SqlParameterSource param_areas = new MapSqlParameterSource()
-//				.addValue("route_id", route.getId())
-//				.addValue("path_id", areas.getareaId())
-//				.addValue("degree", areas.rotateDegree())
-//				.addValue("is_start", areas.isStart())
-//				.addValue("is_goal", areas.isGoal())
-//				.addValue("is_crossroad", areas.isCrossroad())
-//				.addValue("train_data", areas.trainData())
-//				.addValue("around_info", areas.aroundInfo())
-//				.addValue("navigation_text", areas.navigationText());
-//		int result_areas = jdbcTemplate.update(sql_areas, param_areas);
 		
+		//route_idの取得
+		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
+		SqlParameterSource params_id = new MapSqlParameterSource()
+				.addValue("source_id", data.getSourceName())
+				.addValue("destination_id", data.getDestinationName());
+		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
+		
+		//areas挿入
+		for (Area area: areas) {
+			String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
+					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
+			SqlParameterSource param_areas = new MapSqlParameterSource()
+					.addValue("route_id", routeId)
+					.addValue("path_id", (int)area.getRouteId())
+					.addValue("degree", (int)area.getRotateDegree())
+					.addValue("is_start", myIntToBoolean((int)area.getIsStart()))
+					.addValue("is_goal", myIntToBoolean((int)area.getIsGoal()))
+					.addValue("is_crossroad", myIntToBoolean((int)area.getIsCrossroad()))
+					.addValue("train_data", area.trainData())
+					.addValue("around_info", null)
+					.addValue("navigation_text", area.getNavigation());
+			int result_areas = jdbcTemplate.update(sql_areas, param_areas);
+		}
 		if (result_routes != 1 || result_areas != 1) {
 			return ResponseEntity.builder()
 					.status(400)
@@ -183,4 +199,13 @@ public class RouteController {
 				.data(null)
 				.build();
     }
+	
+	private Boolean myIntToBoolean(int n) {
+		// 0: false
+		// 1: true
+		if (n == 0) {
+			return false;
+		}
+		return true;
+	}
 }
