@@ -149,22 +149,27 @@ public class RouteController {
 		logger.info(receiveRouteJson);
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
-		
 		Area areas[] = data.getAreas();
-
+		
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		logger.info("データベースへの格納");
+
+		//source_idの取得
+		logger.info("出発地点のidの取得");
 		//source_idをlocationsテーブルから取得
-		String sql_sourceid = "select id from locations where name = :source_id";
+		String sql_sourceid = "select id from locations where event_id = :event_id and name = :source_name";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
-				.addValue("source_id", data.getSourceName());
+				.addValue("event_id", data.getEventId())
+				.addValue("source_name", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
 		logger.info("sourceId="+sourceId);
 		
+		
 		//destination_idをlocationsテーブルから取得
-		String sql_destinationid = "select id from locations where name = :destination_id";
+		logger.info("目的地のidの取得");
+		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_id";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
+				.addValue("event_id", data.getEventId())
 				.addValue("destination_id", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
 		logger.info("destinationId="+destinationId);
