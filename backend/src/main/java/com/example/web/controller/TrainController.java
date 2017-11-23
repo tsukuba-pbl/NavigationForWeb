@@ -42,9 +42,9 @@ public class TrainController {
 		logger.info(jsonString);
 		
 		//パース
-		GettingStarted data = Converter.fromJsonString(jsonString);
+		RouteData data = Converter.fromJsonString(jsonString);
 		
-		int eventId = (int) data.getEventId();
+		String eventId = data.getEventId();
 		String sourceName = data.getSourceName();
 		String destinationName = data.getDestinationName();
 		Area areas[] = data.getAreas();

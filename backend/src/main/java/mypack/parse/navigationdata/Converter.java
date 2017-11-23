@@ -8,11 +8,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class Converter {
 	// Serialize/deserialize helpers
 
-    public static GettingStarted fromJsonString(String json) throws IOException {
+    public static RouteData fromJsonString(String json) throws IOException {
         return getObjectReader().readValue(json);
     }
 
-    public static String toJsonString(GettingStarted obj) throws JsonProcessingException {
+    public static String toJsonString(RouteData obj) throws JsonProcessingException {
         return getObjectWriter().writeValueAsString(obj);
     }
 
@@ -21,8 +21,8 @@ public class Converter {
 
     private static void instantiateMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        reader = mapper.reader(GettingStarted.class);
-        writer = mapper.writerFor(GettingStarted.class);
+        reader = mapper.reader(RouteData.class);
+        writer = mapper.writerFor(RouteData.class);
     }
 
     private static ObjectReader getObjectReader() {

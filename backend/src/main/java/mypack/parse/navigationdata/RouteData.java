@@ -3,10 +3,10 @@ package mypack.parse.navigationdata;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.*;
 
-public class GettingStarted {
+public class RouteData {
 	private Area[] areas;
     private String destinationName;
-    private long eventId;
+    private String eventId;
     private String sourceName;
 
     @JsonProperty("areas")
@@ -20,9 +20,9 @@ public class GettingStarted {
     public void setDestinationName(String value) { this.destinationName = value; }
 
     @JsonProperty("eventId")
-    public long getEventId() { return eventId; }
+    public String getEventId() { return eventId; }
     @JsonProperty("eventId")
-    public void setEventId(long value) { this.eventId = value; }
+    public void setEventId(String value) { this.eventId = value; }
 
     @JsonProperty("sourceName")
     public String getSourceName() { return sourceName; }
