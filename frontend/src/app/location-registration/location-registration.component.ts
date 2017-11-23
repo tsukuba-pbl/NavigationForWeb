@@ -34,8 +34,6 @@ export class LocationRegistrationComponent implements OnInit {
     })
   }
 
-
-
   onSubmit(formGroup: FormGroup) {
     if(!formGroup.valid || !this.eventId) {
       return
