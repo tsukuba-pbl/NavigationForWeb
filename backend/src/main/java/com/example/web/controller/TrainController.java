@@ -7,14 +7,22 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.web.entity.ResponseEntity;
+
 @Controller
 @RequestMapping("/api/train")
 public class TrainController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
@@ -23,6 +31,18 @@ public class TrainController {
 		map.put("ume", 25);
 		map.put("turu", 23);
 		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/test", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public Object test(@RequestBody String json) {
+		logger.info(json);
+		
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to upload navigation data")
+				.data(null)
+				.build();
 	}
 	
 	public int sum(int a, int b) {
