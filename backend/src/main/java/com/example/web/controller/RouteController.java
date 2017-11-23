@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.BeaconEntity;
 import com.example.web.entity.NavigationEntity;
-import com.example.web.entity.ParsedRouteAreaEntity;
 import com.example.web.entity.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -166,11 +165,5 @@ public class RouteController {
 //				.build();
 //    }
     
-    //計測アプリから送られてきたJSONデータをパースし，そのデータを返す
-    private ParsedRouteAreaEntity getParsedRouteAreaEntity(String strJson) {
-    		
-		return null;
-    	
-    }
 	
 }
