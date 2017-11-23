@@ -5,8 +5,8 @@
     <h2>登録されている目的地一覧</h2>
     <div>
       <ul >
-        <li>
-          会場A
+        <li *ngFor="let location of locations">
+          {{location.name}}
         </li>
       </ul>
     </div>
