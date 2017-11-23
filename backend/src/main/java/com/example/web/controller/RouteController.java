@@ -154,13 +154,13 @@ public class RouteController {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		
 		//source_idをStringからIntに
-		String sql_sourceid = "select id form locations where :source_id";
+		String sql_sourceid = "select id form locations where source_id = :source_id";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
 				.addValue("source_id", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
 		
 		//destination_idをStringからIntに
-		String sql_destinationid = "select id form locations where :destination_id";
+		String sql_destinationid = "select id form locations where destination_id = :destination_id";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
 				.addValue("destination_id", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
