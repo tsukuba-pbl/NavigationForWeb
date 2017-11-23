@@ -76,17 +76,10 @@ public class TrainController {
 			logger.info("---------------------------");
 			
 			Beacon trainDataList[][] = area.getBeacons();
-			//trainDataList = "Beacons":[ [ .... ] ]
-			for(Beacon trainData[] : trainDataList) {
-				//trainData = [ {minor: , rssi: },{.....},{.....}, ..... ]
-				for(Beacon beacon: trainData) {
-					//beacon = {minor: , rssi: }
-					int minor = (int)beacon.getMinorId();
-					int rssi = (int)beacon.getRssi();
-					logger.info("[" + minor + "," + rssi + "],");
-				}
-			}
+			String beaconJsonString = getTrainDataAsJson(trainDataList);
 			logger.info("===============================");
+			logger.info(beaconJsonString);
+			
 		}
 
 		
@@ -95,6 +88,33 @@ public class TrainController {
 				.message("success to upload navigation data")
 				.data(null)
 				.build();
+	}
+	
+	
+	//電波強度のトレーニングデータの部分をJSON形式に変換する
+	private String getTrainDataAsJson(Beacon[][] trainDataList) {
+		String jsonString = "";
+		
+		jsonString = "[";
+		for(int i = 0; i < trainDataList.length; i++) {
+			jsonString += "[";
+			for(int j = 0; j < trainDataList[i].length; j++) {
+				int minor = (int)trainDataList[i][j].getMinorId();
+				int rssi = (int)trainDataList[i][j].getRssi();
+				logger.info("[" + minor + "," + rssi + "],");
+				jsonString += "{" + "minor : " + minor + "," + "rssi" + ":" + rssi + "}";
+				if(j < trainDataList[i].length - 1) {
+					jsonString += ",";
+				}
+			}
+			jsonString += "]";
+			if(i < trainDataList.length - 1) {
+				jsonString += ",";
+			}
+		}
+		jsonString += "]";
+		
+		return jsonString;
 	}
 	
 	public int sum(int a, int b) {
