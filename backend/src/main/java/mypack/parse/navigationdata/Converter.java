@@ -1,4 +1,4 @@
-package io.quicktype;
+package mypack.parse.navigationdata;
 
 import java.util.Map;
 import java.io.IOException;

@@ -4,6 +4,7 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.ResponseEntity;
+
+import mypack.parse.navigationdata.*;
 
 @Controller
 @RequestMapping("/api/train")
@@ -35,8 +38,23 @@ public class TrainController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/test", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object test(@RequestBody String json) {
-		logger.info(json);
+	public Object test(@RequestBody String jsonString) throws IOException {
+		logger.info(jsonString);
+		
+		//パース
+		GettingStarted data = Converter.fromJsonString(jsonString);
+		
+		int eventId = (int) data.getEventId();
+		String sourceName = data.getSourceName();
+		String destinationName = data.getDestinationName();
+		Area areas[] = data.getAreas();
+		
+		logger.info("---------------------------");
+		logger.info("eventId = " + eventId + "¥n");
+		logger.info("---------------------------");
+		logger.info("sourceName = " + sourceName + "¥n");
+		logger.info("---------------------------");
+		logger.info("destinationName = " + destinationName + "¥n");
 		
 		return ResponseEntity.builder()
 				.status(200)
