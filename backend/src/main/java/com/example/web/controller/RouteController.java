@@ -137,7 +137,7 @@ public class RouteController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
+	public Object receiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
 		Area areas[] = data.getAreas();
