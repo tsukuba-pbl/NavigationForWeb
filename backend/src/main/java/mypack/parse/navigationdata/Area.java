@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.*;
 public class Area {
 	private Beacon[][] beacons;
     private long isCrossroad;
+    private long isRoad;
     private long isGoal;
     private long isStart;
     private String navigation;
@@ -22,6 +23,11 @@ public class Area {
     public long getIsCrossroad() { return isCrossroad; }
     @JsonProperty("isCrossroad")
     public void setIsCrossroad(long value) { this.isCrossroad = value; }
+    
+    @JsonProperty("isRoad")
+    public long getIsRoad() { return isRoad; }
+    @JsonProperty("isRoad")
+    public void setIsRoad(long value) { this.isRoad = value; }
 
     @JsonProperty("isGoal")
     public long getIsGoal() { return isGoal; }

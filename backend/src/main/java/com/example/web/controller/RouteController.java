@@ -191,19 +191,17 @@ public class RouteController {
 		
 		//areaテーブルで必要となる外部キーroute_idの取得
 		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
-		//String sql_routeId = "select id from routes where source_id = 1 and destination_id = 2";
 		SqlParameterSource params_id = new MapSqlParameterSource()
-				.addValue("source_id", 1)
-				.addValue("destination_id", 2);
+				.addValue("source_id", sourceId)
+				.addValue("destination_id", destinationId);
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
 		logger.info("routeId = " + routeId);
-		
 		
 		//areaテーブルへの格納
 		int result_areas = 1; //エラコード用でとりあえず変数を用意している
 		for (Area area: areas) {
-			String sql_areas = "insert into areas (route_id, path_id, degree, is_start, is_goal, is_crossroad, is_road, train_data, around_info, navigation_text) "
-					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_crossroad, :is_road, :train_data, :around_info, :navigation_text)";
+			String sql_areas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
+					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_road, :is_crossroad, :train_data, :around_info, :navigation_text)";
 			SqlParameterSource param_areas = new MapSqlParameterSource()
 					.addValue("route_id", routeId)
 					.addValue("path_id", (int)area.getRouteId())
@@ -211,6 +209,7 @@ public class RouteController {
 					.addValue("is_start", myIntToBoolean((int)area.getIsStart()))
 					.addValue("is_goal", myIntToBoolean((int)area.getIsGoal()))
 					.addValue("is_crossroad", myIntToBoolean((int)area.getIsCrossroad()))
+					.addValue("is_road", myIntToBoolean((int)area.getIsRoad()))
 					.addValue("train_data", getTrainDataAsJson(area.getBeacons()))
 					.addValue("around_info", null)
 					.addValue("navigation_text", area.getNavigation());
@@ -252,7 +251,7 @@ public class RouteController {
 					int minor = (int)trainDataList[i][j].getMinorId();
 					int rssi = (int)trainDataList[i][j].getRssi();
 					logger.info("[" + minor + "," + rssi + "],");
-					jsonString += "{" + "minor : " + minor + "," + "rssi" + ":" + rssi + "}";
+					jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
 					if(j < trainDataList[i].length - 1) {
 						jsonString += ",";
 					}
