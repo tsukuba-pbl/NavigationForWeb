@@ -164,13 +164,12 @@ public class RouteController {
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
 		logger.info("sourceId="+sourceId);
 		
-		
 		//destination_idをlocationsテーブルから取得
 		logger.info("目的地のidの取得");
-		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_id";
+		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_name";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
 				.addValue("event_id", data.getEventId())
-				.addValue("destination_id", data.getDestinationName());
+				.addValue("destination_name", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
 		logger.info("destinationId="+destinationId);
 		logger.info("EventId="+data.getEventId());
@@ -186,14 +185,19 @@ public class RouteController {
 		logger.info("destination_id="+destinationId);
 		logger.info("event_id="+data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
+		logger.info("result_routes = " + result_routes);
 		logger.info("routesテーブルへ挿入成功");
+		logger.info("------------------------------");
 		
 		//areaテーブルで必要となる外部キーroute_idの取得
 		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
+		//String sql_routeId = "select id from routes where source_id = 1 and destination_id = 2";
 		SqlParameterSource params_id = new MapSqlParameterSource()
-				.addValue("source_id", sourceId)
-				.addValue("destination_id", destinationId);
+				.addValue("source_id", 1)
+				.addValue("destination_id", 2);
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
+		logger.info("routeId = " + routeId);
+		
 		
 		//areaテーブルへの格納
 		int result_areas = 1; //エラコード用でとりあえず変数を用意している
