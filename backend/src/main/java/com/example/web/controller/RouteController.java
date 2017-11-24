@@ -141,6 +141,7 @@ public class RouteController {
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
 		Area areas[] = data.getAreas();
+		final String event_ID = "event_id";
 		
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -149,14 +150,14 @@ public class RouteController {
 		//source_idをlocationsテーブルから取得
 		String sql_sourceid = "select id from locations where event_id = :event_id and name = :source_name";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
-				.addValue("event_id", data.getEventId())
+				.addValue(event_ID, data.getEventId())
 				.addValue("source_name", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
 		
 		//destination_idをlocationsテーブルから取得
 		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_name";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
-				.addValue("event_id", data.getEventId())
+				.addValue(event_ID, data.getEventId())
 				.addValue("destination_name", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
 		
@@ -166,7 +167,7 @@ public class RouteController {
 		SqlParameterSource param_routes = new MapSqlParameterSource()
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId)
-				.addValue("event_id", data.getEventId());
+				.addValue(event_ID, data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
 		logger.info("routesテーブルへ格納完了");
 		logger.info("------------------------------");
