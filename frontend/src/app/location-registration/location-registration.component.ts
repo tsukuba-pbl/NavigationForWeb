@@ -17,6 +17,7 @@ export class LocationRegistrationComponent implements OnInit {
   @ViewChild('f') form
   eventId: string = ""
   resultText: string = ""
+  locations: LocationType[] = []
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,10 +27,12 @@ export class LocationRegistrationComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.eventId = params["id"]
+      this.locationService.getLocations(this.eventId)
+      .subscribe(result => {
+        this.locations = result["locations"]
+      })
     })
   }
-
-
 
   onSubmit(formGroup: FormGroup) {
     if(!formGroup.valid || !this.eventId) {
@@ -50,6 +53,10 @@ export class LocationRegistrationComponent implements OnInit {
         case 200: 
           this.resultText = "目的地が登録できました"
           this.form.resetForm()
+          this.locationService.getLocations(this.eventId)
+          .subscribe(result => {
+            this.locations = result["locations"]
+          })
           break;
         case 300: 
           this.resultText = "既に同じ目的地が登録されています"
