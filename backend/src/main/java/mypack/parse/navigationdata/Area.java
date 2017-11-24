@@ -1,6 +1,5 @@
 package mypack.parse.navigationdata;
 
-import java.util.Map;
 import com.fasterxml.jackson.annotation.*;
 
 public class Area {

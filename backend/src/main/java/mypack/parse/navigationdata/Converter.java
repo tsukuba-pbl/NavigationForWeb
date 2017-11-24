@@ -1,6 +1,5 @@
 package mypack.parse.navigationdata;
 
-import java.util.Map;
 import java.io.IOException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -188,7 +188,7 @@ public class RouteController {
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
 		
 		//areaテーブルへの格納
-		int result_areas = 1; //エラコード用でとりあえず変数を用意している
+		int result_areas = -1; //エラコード用でとりあえず変数を用意している
 		for (Area area: areas) {
 			String sql_areas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
 					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_road, :is_crossroad, :train_data, :around_info, :navigation_text)";
@@ -231,28 +231,28 @@ public class RouteController {
 	}
 	
 	//電波強度のトレーニングデータの部分をJSON形式に変換する
-		private String getTrainDataAsJson(Beacon[][] trainDataList) {
-			String jsonString = "";
-			
-			jsonString = "[";
-			for(int i = 0; i < trainDataList.length; i++) {
-				jsonString += "[";
-				for(int j = 0; j < trainDataList[i].length; j++) {
-					int minor = (int)trainDataList[i][j].getMinorId();
-					int rssi = (int)trainDataList[i][j].getRssi();
-					logger.info("[" + minor + "," + rssi + "],");
-					jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
-					if(j < trainDataList[i].length - 1) {
-						jsonString += ",";
-					}
-				}
-				jsonString += "]";
-				if(i < trainDataList.length - 1) {
+	private String getTrainDataAsJson(Beacon[][] trainDataList) {
+		String jsonString = "";
+		
+		jsonString = "[";
+		for(int i = 0; i < trainDataList.length; i++) {
+			jsonString += "[";
+			for(int j = 0; j < trainDataList[i].length; j++) {
+				int minor = (int)trainDataList[i][j].getMinorId();
+				int rssi = (int)trainDataList[i][j].getRssi();
+				logger.info("[" + minor + "," + rssi + "],");
+				jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
+				if(j < trainDataList[i].length - 1) {
 					jsonString += ",";
 				}
 			}
 			jsonString += "]";
-			
-			return jsonString;
+			if(i < trainDataList.length - 1) {
+				jsonString += ",";
+			}
 		}
+		jsonString += "]";
+		
+		return jsonString;
+	}
 }
