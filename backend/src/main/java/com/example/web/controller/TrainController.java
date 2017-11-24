@@ -1,11 +1,7 @@
 package com.example.web.controller;
 
-import org.springframework.ui.Model;
-
-import java.util.List;
 import java.util.Map;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -48,12 +44,13 @@ public class TrainController {
 		String sourceName = data.getSourceName();
 		String destinationName = data.getDestinationName();
 		Area areas[] = data.getAreas();
+		final String sikiri = "---------------------------";
 		
-		logger.info("---------------------------");
+		logger.info(sikiri);
 		logger.info("eventId = " + eventId);
-		logger.info("---------------------------");
+		logger.info(sikiri);
 		logger.info("sourceName = " + sourceName);
-		logger.info("---------------------------");
+		logger.info(sikiri);
 		logger.info("destinationName = " + destinationName);
 		
 		//エリアオブジェクトを抽出
@@ -73,7 +70,7 @@ public class TrainController {
 			logger.info("navigationText = " + navigationText);
 			logger.info("rotateDegree = " + rotateDegree);
 			
-			logger.info("---------------------------");
+			logger.info(sikiri);
 			
 			Beacon trainDataList[][] = area.getBeacons();
 			String beaconJsonString = getTrainDataAsJson(trainDataList);
