@@ -197,5 +197,6 @@ public class EventController {
 		locationData.put("locations", list);
 		return locationData;
     }
+ 
 
 }

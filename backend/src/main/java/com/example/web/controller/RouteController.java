@@ -1,6 +1,8 @@
 package com.example.web.controller;
 
+
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +13,14 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +34,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mypack.parse.navigationdata.*;
+
 
 @Controller
 @RequestMapping("/api/routes")
@@ -41,10 +46,6 @@ public class RouteController {
     
     private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
     
-    @Autowired
-    private RedisTemplate<String, NavigationEntity> redisTemplate;
-    
-
     @ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object index(@PathVariable("eventId") String eventId, @RequestParam("departure") String departure, @RequestParam("destination") String destination) {
@@ -133,6 +134,125 @@ public class RouteController {
 					.data(response)
 					.build();
     }
-    
 	
+	@ResponseBody
+	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public Object receiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
+		//jsonのパース
+		RouteData data = Converter.fromJsonString(receiveRouteJson);
+		Area areas[] = data.getAreas();
+		final String event_ID = "event_id";
+		
+		//データベースへの格納
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+
+		//source_idの取得
+		//source_idをlocationsテーブルから取得
+		String sql_sourceid = "select id from locations where event_id = :event_id and name = :source_name";
+		SqlParameterSource param_sourceid = new MapSqlParameterSource()
+				.addValue(event_ID, data.getEventId())
+				.addValue("source_name", data.getSourceName());
+		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
+		
+		//destination_idをlocationsテーブルから取得
+		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_name";
+		SqlParameterSource param_destinationid = new MapSqlParameterSource()
+				.addValue(event_ID, data.getEventId())
+				.addValue("destination_name", data.getDestinationName());
+		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
+		
+		//routesテーブルへ格納
+		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
+				+ "values (:source_id, :destination_id, :event_id)";
+		SqlParameterSource param_routes = new MapSqlParameterSource()
+				.addValue("source_id", sourceId)
+				.addValue("destination_id", destinationId)
+				.addValue(event_ID, data.getEventId());
+		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
+		logger.info("routesテーブルへ格納完了");
+		logger.info("------------------------------");
+		
+		if (result_routes != 1) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert route information")
+					.data(null)
+					.build();
+	    }
+		
+		//areaテーブルで必要となる外部キーroute_idの取得
+		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
+		SqlParameterSource params_id = new MapSqlParameterSource()
+				.addValue("source_id", sourceId)
+				.addValue("destination_id", destinationId);
+		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
+		
+		//areaテーブルへの格納
+		int result_areas = -1; //エラコード用でとりあえず変数を用意している
+		for (Area area: areas) {
+			String sql_areas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
+					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_road, :is_crossroad, :train_data, :around_info, :navigation_text)";
+			SqlParameterSource param_areas = new MapSqlParameterSource()
+					.addValue("route_id", routeId)
+					.addValue("path_id", (int)area.getRouteId())
+					.addValue("degree", (int)area.getRotateDegree())
+					.addValue("is_start", myIntToBoolean((int)area.getIsStart()))
+					.addValue("is_goal", myIntToBoolean((int)area.getIsGoal()))
+					.addValue("is_crossroad", myIntToBoolean((int)area.getIsCrossroad()))
+					.addValue("is_road", myIntToBoolean((int)area.getIsRoad()))
+					.addValue("train_data", getTrainDataAsJson(area.getBeacons()))
+					.addValue("around_info", null)
+					.addValue("navigation_text", area.getNavigation());
+			result_areas = jdbcTemplate.update(sql_areas, param_areas);
+		}
+		if (result_areas != 1) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert route information")
+					.data(null)
+					.build();
+	    }
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to insert route information")
+				.data(null)
+				.build();
+    }
+	
+	//Int型をBoolean型に変換する
+	private Boolean myIntToBoolean(int n) {
+		// 0: false
+		// 1: true
+		if (n == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	//電波強度のトレーニングデータの部分をJSON形式に変換する
+	private String getTrainDataAsJson(Beacon[][] trainDataList) {
+		String jsonString = "";
+		
+		jsonString = "[";
+		for(int i = 0; i < trainDataList.length; i++) {
+			jsonString += "[";
+			for(int j = 0; j < trainDataList[i].length; j++) {
+				int minor = (int)trainDataList[i][j].getMinorId();
+				int rssi = (int)trainDataList[i][j].getRssi();
+				logger.info("[" + minor + "," + rssi + "],");
+				jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
+				if(j < trainDataList[i].length - 1) {
+					jsonString += ",";
+				}
+			}
+			jsonString += "]";
+			if(i < trainDataList.length - 1) {
+				jsonString += ",";
+			}
+		}
+		jsonString += "]";
+		
+		return jsonString;
+	}
 }
