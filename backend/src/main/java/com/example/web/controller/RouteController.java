@@ -13,10 +13,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.web.entity.BeaconEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
-import com.example.web.entity.RouteEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -49,10 +46,6 @@ public class RouteController {
     
     private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
     
-    @Autowired
-    private RedisTemplate<String, NavigationEntity> redisTemplate;
-    
-
     @ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object index(@PathVariable("eventId") String eventId, @RequestParam("departure") String departure, @RequestParam("destination") String destination) {
@@ -145,8 +138,6 @@ public class RouteController {
 	@ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public Object ReceiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
-		logger.info("ルートデータがpostされてきた");
-		logger.info(receiveRouteJson);
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
 		Area areas[] = data.getAreas();
@@ -155,24 +146,19 @@ public class RouteController {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
 		//source_idの取得
-		logger.info("出発地点のidの取得");
 		//source_idをlocationsテーブルから取得
 		String sql_sourceid = "select id from locations where event_id = :event_id and name = :source_name";
 		SqlParameterSource param_sourceid = new MapSqlParameterSource()
 				.addValue("event_id", data.getEventId())
 				.addValue("source_name", data.getSourceName());
 		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
-		logger.info("sourceId="+sourceId);
 		
 		//destination_idをlocationsテーブルから取得
-		logger.info("目的地のidの取得");
 		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_name";
 		SqlParameterSource param_destinationid = new MapSqlParameterSource()
 				.addValue("event_id", data.getEventId())
 				.addValue("destination_name", data.getDestinationName());
 		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
-		logger.info("destinationId="+destinationId);
-		logger.info("EventId="+data.getEventId());
 		
 		//routesテーブルへ格納
 		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
@@ -181,13 +167,17 @@ public class RouteController {
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId)
 				.addValue("event_id", data.getEventId());
-		logger.info("source_id="+sourceId);
-		logger.info("destination_id="+destinationId);
-		logger.info("event_id="+data.getEventId());
 		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
-		logger.info("result_routes = " + result_routes);
-		logger.info("routesテーブルへ挿入成功");
+		logger.info("routesテーブルへ格納完了");
 		logger.info("------------------------------");
+		
+		if (result_routes != 1) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert route information")
+					.data(null)
+					.build();
+	    }
 		
 		//areaテーブルで必要となる外部キーroute_idの取得
 		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
@@ -195,7 +185,6 @@ public class RouteController {
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId);
 		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
-		logger.info("routeId = " + routeId);
 		
 		//areaテーブルへの格納
 		int result_areas = 1; //エラコード用でとりあえず変数を用意している
@@ -215,7 +204,7 @@ public class RouteController {
 					.addValue("navigation_text", area.getNavigation());
 			result_areas = jdbcTemplate.update(sql_areas, param_areas);
 		}
-		if (result_routes != 1 || result_areas != 1) {
+		if (result_areas != 1) {
 			return ResponseEntity.builder()
 					.status(400)
 					.message("failed to insert route information")
