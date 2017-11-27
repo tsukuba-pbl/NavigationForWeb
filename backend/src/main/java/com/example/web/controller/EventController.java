@@ -60,21 +60,24 @@ public class EventController {
     @ResponseBody
    	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object getEvent(@PathVariable("eventId") String id) {
-    	EventEntity resultEvent = new EventEntity();
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from events where id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", id);
 		logger.info("will fetch event from databases");
 		List<EventEntity> event = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event from databases");
-		if (!event.isEmpty()) {
-			resultEvent = event.get(0);
+		if (event.isEmpty()) {
+			logger.error("have not event from databases");
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to fetch event")
+					.data(null)
+					.build();
 		}
-
 		return ResponseEntity.builder()
 				.status(200)
 				.message("success to fetch event")
-				.data(resultEvent)
+				.data(event.get(0))
 				.build();
     }
     
