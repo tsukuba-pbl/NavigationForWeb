@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.BeaconEntity;
-import com.example.web.entity.EventEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -64,13 +63,15 @@ public class RouteController {
 					.build();
     		}
     		
+    		String redisKey = "route_"+eventId+"_"+departure+"_"+destination;
+    		
     		// Redisにキャッシュされていたらその情報を取得して返す
-    		if(redisTemplate.opsForValue().get("route_"+eventId+"_"+departure+"_"+destination) != null) {
+    		if(redisTemplate.opsForValue().get(redisKey) != null) {
     			logger.info("return redis value");
     			return ResponseEntity.builder()
 					.status(200)
 					.message("success to fetch navigation")
-					.data(redisTemplate.opsForValue().get("route_"+eventId+"_"+departure+"_"+destination))
+					.data(redisTemplate.opsForValue().get(redisKey))
 					.build();
     		}
     		
@@ -160,7 +161,7 @@ public class RouteController {
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
 		
-		redisTemplate.opsForValue().set("route_"+eventId+"_"+departure+"_"+destination, response);
+		redisTemplate.opsForValue().set(redisKey, response);
 		logger.info("set value in redis");
 		
     		return ResponseEntity.builder()
