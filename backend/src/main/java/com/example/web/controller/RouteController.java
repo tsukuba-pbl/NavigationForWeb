@@ -112,21 +112,27 @@ public class RouteController {
 			}
 			isReverse = true;
 			// データの修正
-			NavigationEntity first = navigation.get(0);
-			first.setIsGoal(0);
-			first.setIsStart(1);
-			navigation.set(0, first);
-			NavigationEntity end = navigation.get(navigation.size()-1);
-			end.setIsGoal(1);
-			end.setIsStart(0);
-			navigation.set(navigation.size()-1, end);
+			NavigationEntity firstNavigation = navigation.get(0);
+			NavigationEntity endNavigation = navigation.get(navigation.size()-1);
+			
+			String tmp = firstNavigation.getNavigationText();
+			firstNavigation.setIsGoal(0);
+			firstNavigation.setIsStart(1);
+			firstNavigation.setNavigationText(endNavigation.getNavigationText());
+			endNavigation.setIsGoal(1);
+			endNavigation.setIsStart(0);
+			endNavigation.setNavigationText(tmp);
+			
+			navigation.set(0, firstNavigation);
+			navigation.set(navigation.size()-1, endNavigation);
 		}
 		logger.info("have fetched event list from databases");
 		
 		List<Object> list = new ArrayList<>();
-		for(NavigationEntity data: navigation) {
+		for(int i = 0; i < navigation.size(); i++) {
+			NavigationEntity data = navigation.get(i);
 			Map<String, Object> entity = new HashMap<>();
-			entity.put("areaId", data.getAreaId());
+			entity.put("areaId", i + 1);
 			//反転ルートの処理を行う
 			//なお，StartとGoalに対しては反転処理を行わない
 			if (isReverse && data.getIsStart() == 0 && data.getIsGoal() == 0) {	
@@ -274,7 +280,7 @@ public class RouteController {
 				int minor = (int)trainDataList[i][j].getMinorId();
 				int rssi = (int)trainDataList[i][j].getRssi();
 				logger.info("[" + minor + "," + rssi + "],");
-				jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
+				jsonString += "{" + "\"minorId\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
 				if(j < trainDataList[i].length - 1) {
 					jsonString += ",";
 				}
