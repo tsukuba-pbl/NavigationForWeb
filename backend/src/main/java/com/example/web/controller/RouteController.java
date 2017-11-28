@@ -49,6 +49,7 @@ public class RouteController {
     @ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object index(@PathVariable("eventId") String eventId, @RequestParam("departure") String departure, @RequestParam("destination") String destination) {
+    		Boolean isReverse = false;
     		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select area.path_id as area_id, area.degree as rotate_degree, area.is_start, area.is_goal, area.is_road, area.is_crossroad, area.train_data as beacons, area.around_info, area.navigation_text"
 				+ " from area join (\n" + 
@@ -86,7 +87,7 @@ public class RouteController {
 						.data(null)
 						.build();
 			}
-			
+			isReverse = true;
 			// データの修正
 			NavigationEntity first = navigation.get(0);
 			first.setIsGoal(0);
@@ -98,11 +99,16 @@ public class RouteController {
 			navigation.set(navigation.size()-1, end);
 		}
 		logger.info("have fetched event list from databases");
+		
 		List<Object> list = new ArrayList<>();
-		navigation.forEach(data -> {
+		for(NavigationEntity data: navigation) {
 			Map<String, Object> entity = new HashMap<>();
 			entity.put("areaId", data.getAreaId());
-			entity.put("rotateDegree", data.getRotateDegree());
+			if (isReverse == true) {	
+				entity.put("rotateDegree", - data.getRotateDegree());
+			} else {
+				entity.put("rotateDegree", data.getRotateDegree());
+			}
 			entity.put("isStart", data.getIsStart());
 			entity.put("isGoal", data.getIsGoal());
 			entity.put("isRoad", data.getIsRoad());
@@ -124,7 +130,8 @@ public class RouteController {
 				logger.error(e.toString());
 			}
 			list.add(entity);
-		});
+		}
+		
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
 		
