@@ -246,7 +246,7 @@ public class RouteController {
 				int minor = (int)trainDataList[i][j].getMinorId();
 				int rssi = (int)trainDataList[i][j].getRssi();
 				logger.info("[" + minor + "," + rssi + "],");
-				jsonString += "{" + "\"minor\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
+				jsonString += "{" + "\"minorId\" : " + minor + "," + "\"rssi\"" + ":" + rssi + "}";
 				if(j < trainDataList[i].length - 1) {
 					jsonString += ",";
 				}
