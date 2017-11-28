@@ -104,7 +104,9 @@ public class RouteController {
 		for(NavigationEntity data: navigation) {
 			Map<String, Object> entity = new HashMap<>();
 			entity.put("areaId", data.getAreaId());
-			if (isReverse) {	
+			//反転ルートの処理を行う
+			//なお，StartとGoalに対しては反転処理を行わない
+			if (isReverse && data.getIsStart() == 0 && data.getIsGoal() == 0) {	
 				entity.put("rotateDegree", - data.getRotateDegree());
 			} else {
 				entity.put("rotateDegree", data.getRotateDegree());
