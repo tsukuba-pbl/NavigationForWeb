@@ -104,7 +104,7 @@ public class RouteController {
 		for(NavigationEntity data: navigation) {
 			Map<String, Object> entity = new HashMap<>();
 			entity.put("areaId", data.getAreaId());
-			if (isReverse == true) {	
+			if (isReverse) {	
 				entity.put("rotateDegree", - data.getRotateDegree());
 			} else {
 				entity.put("rotateDegree", data.getRotateDegree());
@@ -147,7 +147,6 @@ public class RouteController {
 	public Object receiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
-		Area areas[] = data.getAreas();
 		final String event_ID = "event_id";
 		
 		//データベースへの格納
@@ -196,7 +195,7 @@ public class RouteController {
 		
 		//areaテーブルへの格納
 		int result_areas = -1; //エラコード用でとりあえず変数を用意している
-		for (Area area: areas) {
+		for (Area area: data.getAreas()) {
 			String sql_areas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
 					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_road, :is_crossroad, :train_data, :around_info, :navigation_text)";
 			SqlParameterSource param_areas = new MapSqlParameterSource()
