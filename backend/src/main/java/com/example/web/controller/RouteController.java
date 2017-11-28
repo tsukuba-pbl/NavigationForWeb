@@ -106,9 +106,10 @@ public class RouteController {
 		logger.info("have fetched event list from databases");
 		
 		List<Object> list = new ArrayList<>();
-		for(NavigationEntity data: navigation) {
+		for(int i = 0; i < navigation.size(); i++) {
+			NavigationEntity data = navigation.get(i);
 			Map<String, Object> entity = new HashMap<>();
-			entity.put("areaId", data.getAreaId());
+			entity.put("areaId", i + 1);
 			//反転ルートの処理を行う
 			//なお，StartとGoalに対しては反転処理を行わない
 			if (isReverse && data.getIsStart() == 0 && data.getIsGoal() == 0) {	
