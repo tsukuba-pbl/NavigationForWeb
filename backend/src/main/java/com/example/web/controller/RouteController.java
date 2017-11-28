@@ -49,6 +49,7 @@ public class RouteController {
     @ResponseBody
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     public Object index(@PathVariable("eventId") String eventId, @RequestParam("departure") String departure, @RequestParam("destination") String destination) {
+    		Boolean isReverse = false;
     		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select area.path_id as area_id, area.degree as rotate_degree, area.is_start, area.is_goal, area.is_road, area.is_crossroad, area.train_data as beacons, area.around_info, area.navigation_text"
 				+ " from area join (\n" + 
@@ -86,7 +87,7 @@ public class RouteController {
 						.data(null)
 						.build();
 			}
-			
+			isReverse = true;
 			// データの修正
 			NavigationEntity first = navigation.get(0);
 			first.setIsGoal(0);
@@ -98,11 +99,16 @@ public class RouteController {
 			navigation.set(navigation.size()-1, end);
 		}
 		logger.info("have fetched event list from databases");
+		
 		List<Object> list = new ArrayList<>();
-		navigation.forEach(data -> {
+		for(NavigationEntity data: navigation) {
 			Map<String, Object> entity = new HashMap<>();
 			entity.put("areaId", data.getAreaId());
-			entity.put("rotateDegree", data.getRotateDegree());
+			if (isReverse) {	
+				entity.put("rotateDegree", - data.getRotateDegree());
+			} else {
+				entity.put("rotateDegree", data.getRotateDegree());
+			}
 			entity.put("isStart", data.getIsStart());
 			entity.put("isGoal", data.getIsGoal());
 			entity.put("isRoad", data.getIsRoad());
@@ -124,7 +130,8 @@ public class RouteController {
 				logger.error(e.toString());
 			}
 			list.add(entity);
-		});
+		}
+		
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
 		
@@ -140,39 +147,37 @@ public class RouteController {
 	public Object receiveRouteInformation(@PathVariable("eventId") String eventId, @RequestBody String receiveRouteJson) throws IOException {
 		//jsonのパース
 		RouteData data = Converter.fromJsonString(receiveRouteJson);
-		Area areas[] = data.getAreas();
-		final String event_ID = "event_id";
 		
 		//データベースへの格納
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
 		//source_idの取得
 		//source_idをlocationsテーブルから取得
-		String sql_sourceid = "select id from locations where event_id = :event_id and name = :source_name";
-		SqlParameterSource param_sourceid = new MapSqlParameterSource()
-				.addValue(event_ID, data.getEventId())
+		String sqlSourceid = "select id from locations where event_id = :event_id and name = :source_name";
+		SqlParameterSource paramSourceid = new MapSqlParameterSource()
+				.addValue("event_id", data.getEventId())
 				.addValue("source_name", data.getSourceName());
-		int sourceId = jdbcTemplate.queryForObject(sql_sourceid, param_sourceid, Integer.class);
+		int sourceId = jdbcTemplate.queryForObject(sqlSourceid, paramSourceid, Integer.class);
 		
 		//destination_idをlocationsテーブルから取得
-		String sql_destinationid = "select id from locations where event_id = :event_id and name = :destination_name";
-		SqlParameterSource param_destinationid = new MapSqlParameterSource()
-				.addValue(event_ID, data.getEventId())
+		String sqlDestinationid = "select id from locations where event_id = :event_id and name = :destination_name";
+		SqlParameterSource paramDestinationid = new MapSqlParameterSource()
+				.addValue("event_id", data.getEventId())
 				.addValue("destination_name", data.getDestinationName());
-		int destinationId = jdbcTemplate.queryForObject(sql_destinationid, param_destinationid, Integer.class);
+		int destinationId = jdbcTemplate.queryForObject(sqlDestinationid, paramDestinationid, Integer.class);
 		
 		//routesテーブルへ格納
-		String sql_routes = "insert into routes (source_id, destination_id, event_id) "
+		String sqlRoutes = "insert into routes (source_id, destination_id, event_id) "
 				+ "values (:source_id, :destination_id, :event_id)";
-		SqlParameterSource param_routes = new MapSqlParameterSource()
+		SqlParameterSource paramRoutes = new MapSqlParameterSource()
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId)
-				.addValue(event_ID, data.getEventId());
-		int result_routes = jdbcTemplate.update(sql_routes, param_routes);
+				.addValue("event_id", data.getEventId());
+		int resultRoutes = jdbcTemplate.update(sqlRoutes, paramRoutes);
 		logger.info("routesテーブルへ格納完了");
 		logger.info("------------------------------");
 		
-		if (result_routes != 1) {
+		if (resultRoutes != 1) {
 			return ResponseEntity.builder()
 					.status(400)
 					.message("failed to insert route information")
@@ -181,18 +186,18 @@ public class RouteController {
 	    }
 		
 		//areaテーブルで必要となる外部キーroute_idの取得
-		String sql_routeId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
-		SqlParameterSource params_id = new MapSqlParameterSource()
+		String sqlRouteId = "select id from routes where source_id = :source_id and destination_id = :destination_id";
+		SqlParameterSource paramsId = new MapSqlParameterSource()
 				.addValue("source_id", sourceId)
 				.addValue("destination_id", destinationId);
-		int routeId = jdbcTemplate.queryForObject(sql_routeId, params_id, Integer.class);
+		int routeId = jdbcTemplate.queryForObject(sqlRouteId, paramsId, Integer.class);
 		
 		//areaテーブルへの格納
-		int result_areas = -1; //エラコード用でとりあえず変数を用意している
-		for (Area area: areas) {
-			String sql_areas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
+		int resultAreas = -1; //エラコード用でとりあえず変数を用意している
+		for (Area area: data.getAreas()) {
+			String sqlAreas = "insert into area (route_id, path_id, degree, is_start, is_goal, is_road, is_crossroad, train_data, around_info, navigation_text) "
 					+ "values (:route_id, :path_id, :degree, :is_start, :is_goal, :is_road, :is_crossroad, :train_data, :around_info, :navigation_text)";
-			SqlParameterSource param_areas = new MapSqlParameterSource()
+			SqlParameterSource paramAreas = new MapSqlParameterSource()
 					.addValue("route_id", routeId)
 					.addValue("path_id", (int)area.getRouteId())
 					.addValue("degree", (int)area.getRotateDegree())
@@ -203,9 +208,9 @@ public class RouteController {
 					.addValue("train_data", getTrainDataAsJson(area.getBeacons()))
 					.addValue("around_info", null)
 					.addValue("navigation_text", area.getNavigation());
-			result_areas = jdbcTemplate.update(sql_areas, param_areas);
+			resultAreas = jdbcTemplate.update(sqlAreas, paramAreas);
 		}
-		if (result_areas != 1) {
+		if (resultAreas != 1) {
 			return ResponseEntity.builder()
 					.status(400)
 					.message("failed to insert route information")
