@@ -106,7 +106,7 @@ public class RouteController {
 			entity.put("areaId", data.getAreaId());
 			//反転ルートの処理を行う
 			//なお，StartとGoalに対しては反転処理を行わない
-			if (isReverse && data.isStart == 0 &&  data.isGoal == 0) ) {	
+			if (isReverse && data.isStart == 0 &&  data.isGoal == 0) {	
 				entity.put("rotateDegree", - data.getRotateDegree());
 			} else {
 				entity.put("rotateDegree", data.getRotateDegree());
