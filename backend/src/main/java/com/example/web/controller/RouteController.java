@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.BeaconEntity;
+import com.example.web.entity.EventEntity;
 import com.example.web.entity.NavigationEntity;
 import com.example.web.entity.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -43,6 +45,9 @@ public class RouteController {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private RedisTemplate<String, Map<String, List<Object>>> redisTemplate;
     
     private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
     
@@ -51,6 +56,24 @@ public class RouteController {
     public Object index(@PathVariable("eventId") String eventId, @RequestParam("departure") String departure, @RequestParam("destination") String destination) {
     		Boolean isReverse = false;
     		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    		if (departure == null || destination == null) {
+			return ResponseEntity.builder()
+					.status(400)
+					.message("something wrong")
+					.data(null)
+					.build();
+    		}
+    		
+    		// Redisにキャッシュされていたらその情報を取得して返す
+    		if(redisTemplate.opsForValue().get("route_"+eventId+"_"+departure+"_"+destination) != null) {
+    			logger.info("return redis value");
+    			return ResponseEntity.builder()
+					.status(200)
+					.message("success to fetch navigation")
+					.data(redisTemplate.opsForValue().get("route_"+eventId+"_"+departure+"_"+destination))
+					.build();
+    		}
+    		
 		String sql = "select area.path_id as area_id, area.degree as rotate_degree, area.is_start, area.is_goal, area.is_road, area.is_crossroad, area.train_data as beacons, area.around_info, area.navigation_text"
 				+ " from area join (\n" + 
 				"    select routes.id from routes join (\n" + 
@@ -136,6 +159,9 @@ public class RouteController {
 		
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
+		
+		redisTemplate.opsForValue().set("route_"+eventId+"_"+departure+"_"+destination, response);
+		logger.info("set value in redis");
 		
     		return ResponseEntity.builder()
 					.status(200)

@@ -71,6 +71,7 @@ services:
     volumes:
       - ./mysql/my.conf:/etc/mysql/my.conf
       - ./mysql/log:/var/log/mysql
+      - ./mysql/data:/var/lib/mysql
     container_name: mysql-db
     volumes_from:
       - mysql-data
