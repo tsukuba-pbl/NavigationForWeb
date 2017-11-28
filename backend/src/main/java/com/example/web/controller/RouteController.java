@@ -89,19 +89,19 @@ public class RouteController {
 			}
 			isReverse = true;
 			// データの修正
-			NavigationEntity first = navigation.get(0);
-			NavigationEntity end = navigation.get(navigation.size()-1);
+			NavigationEntity firstNavigation = navigation.get(0);
+			NavigationEntity endNavigation = navigation.get(navigation.size()-1);
 			
-			String tmp = first.getNavigationText();
-			first.setIsGoal(0);
-			first.setIsStart(1);
-			first.setNavigationText(end.getNavigationText());
-			end.setIsGoal(1);
-			end.setIsStart(0);
-			end.setNavigationText(tmp);
+			String tmp = firstNavigation.getNavigationText();
+			firstNavigation.setIsGoal(0);
+			firstNavigation.setIsStart(1);
+			firstNavigation.setNavigationText(endNavigation.getNavigationText());
+			endNavigation.setIsGoal(1);
+			endNavigation.setIsStart(0);
+			endNavigation.setNavigationText(tmp);
 			
-			navigation.set(0, first);
-			navigation.set(navigation.size()-1, end);
+			navigation.set(0, firstNavigation);
+			navigation.set(navigation.size()-1, endNavigation);
 		}
 		logger.info("have fetched event list from databases");
 		
