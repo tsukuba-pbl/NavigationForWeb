@@ -124,11 +124,13 @@ public class EventController {
 					.data(null)
 					.build();
 	    }
-
+	    Map<String, String> response = new HashMap<>();
+	    response.put("eventId", event.getId());
+	    
 		return ResponseEntity.builder()
 				.status(200)
 				.message("success to insert event")
-				.data(null)
+				.data(response)
 				.build();
 	}
 	
