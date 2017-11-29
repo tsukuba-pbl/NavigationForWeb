@@ -61,7 +61,9 @@ export class EventRegistrationComponent implements OnInit {
         case 200: 
           this.resultText = "イベントを登録できました"
           this.form.resetForm()
-          this.router.navigate([''])
+          setTimeout(() => {this.router.navigate(['/events/'+result.data.eventId])}, 1000)
+          console.log(result.data)
+          console.log(result.data.eventId)
           break;
         case 300: 
           this.resultText = "既に同じ目的地が登録されています"
