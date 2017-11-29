@@ -1,0 +1,1 @@
+alter table routes add unique index (source_id, destination_id);
