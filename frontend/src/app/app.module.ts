@@ -14,6 +14,7 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatTabsModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 
 import { AppComponent } from './app.component'
@@ -51,6 +52,7 @@ const routes: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
+    MatProgressSpinnerModule,
     RouterModule.forRoot(routes),
   ],
   exports: [
