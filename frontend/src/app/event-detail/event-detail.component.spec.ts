@@ -2,7 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 import { RouterTestingModule } from '@angular/router/testing'
 
 import { EventDetailComponent } from './event-detail.component'
-
+import { 
+  MatProgressSpinnerModule,
+} from '@angular/material';
 import { HttpModule } from '@angular/http'
 import { EventService } from '../event.service'
 import { Observable } from 'rxjs/Rx'
@@ -24,6 +26,7 @@ describe('EventDetailComponent', () => {
       imports: [
         RouterTestingModule,
         HttpModule,
+        MatProgressSpinnerModule,
       ],
       providers: [
         {provide: EventService, useValue: eventServiceMock}

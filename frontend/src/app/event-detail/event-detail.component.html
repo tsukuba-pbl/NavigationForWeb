@@ -1,16 +1,13 @@
-<div class="page">
-  <h1>イベントの詳細</h1>
-  <div class="event-info" *ngIf="event">
+<div class="hierarchy">
+  <a [routerLink]="['']">イベント一覧</a> / イベント詳細
+</div>
+<div class="page" *ngIf="event; else elseBlock">
+  <h1>{{event.name}}</h1>
+  <div class="event-info">
     <div class="event-row">
       <h2>ID</h2>
       <div class="event-content">
         {{event.id}}
-      </div>
-    </div>
-    <div class="event-row">
-      <h2>名前</h2>
-      <div class="event-content">
-        {{event.name}}
       </div>
     </div>
     <div class="event-row">
@@ -26,32 +23,18 @@
       </div>
     </div>
     <div class="event-row">
-      <h2>開始日時</h2>
+      <h2>日時</h2>
       <div class="event-content">
-        {{event.startDate | date: 'yyyy/MM/dd HH:mm:ss'}}
+        {{event.startDate | date: 'yyyy/MM/dd HH:mm:ss'}} ~ {{event.endDate | date: 'yyyy/MM/dd HH:mm:ss'}}
       </div>
     </div>
     <div class="event-row">
-      <h2>終了日時</h2>
-      <div class="event-content">
-        {{event.endDate | date: 'yyyy/MM/dd HH:mm:ss'}}
-      </div>
-    </div>
-    <div class="event-row">
-      <h2>作成日時</h2>
-      <div class="event-content">
-        {{event.createdAt | date: 'yyyy/MM/dd HH:mm:ss'}}
-      </div>
-    </div>
-    <div class="event-row">
-      <h2>更新日時</h2>
-      <div class="event-content">
-        {{event.updatedAt | date: 'yyyy/MM/dd HH:mm:ss'}}
-      </div>
-    </div>
-
-    <div class="event-row">
-      <button color="primary" mat-raised-button routerLink="/events/{{event.id}}/locations/new">目的地の管理</button>
+      <button color="primary" mat-raised-button routerLink="/events/{{event.id}}/locations/new">出発地・目的地の設定</button>
     </div>
   </div>
 </div>
+<ng-template #elseBlock>
+  <div class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
