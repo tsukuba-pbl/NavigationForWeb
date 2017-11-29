@@ -1,9 +1,9 @@
 <div class="hierarchy">
-  <a [routerLink]="['']">イベント一覧</a> / <a [routerLink]="['/events/', eventId]">イベント詳細</a> / 目的地の管理
+  <a [routerLink]="['']">イベント一覧</a> / <a [routerLink]="['/events/', eventId]">イベント詳細</a> / 出発地・目的地の設定
 </div>
 <div class="page">
   <div class="container">
-    <h1>目的地の管理</h1>
+    <h1>出発地・目的地の設定</h1>
 
     <h2>登録されている目的地一覧</h2>
     <div>
@@ -14,7 +14,7 @@
       </ul>
     </div>
 
-    <h2>目的地の登録</h2>
+    <h2>出発地・目的地の登録</h2>
     <form [formGroup]="locationForm" #f="ngForm" (ngSubmit)="onSubmit(locationForm)">
       <div class="location">
         <mat-form-field class="location-name">
@@ -30,7 +30,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!locationForm.valid">目的地の登録</button>
+      <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!locationForm.valid">出発地・目的地の登録</button>
       <div class="message">
         {{resultText}}
       </div>
