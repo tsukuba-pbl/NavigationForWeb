@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-
+import { Router } from '@angular/router'
 import { EventService } from '../event.service'
 
 @Component({
@@ -21,7 +21,7 @@ export class EventRegistrationComponent implements OnInit {
   errorMessage: string = ""
   resultText: string = ""
 
-  constructor(private eventService: EventService) {
+  constructor(private eventService: EventService, private router: Router) {
 
   }
 
@@ -61,6 +61,7 @@ export class EventRegistrationComponent implements OnInit {
         case 200: 
           this.resultText = "イベントを登録できました"
           this.form.resetForm()
+          this.router.navigate([''])
           break;
         case 300: 
           this.resultText = "既に同じ目的地が登録されています"
