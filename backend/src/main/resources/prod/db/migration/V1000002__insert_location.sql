@@ -1,1 +1,0 @@
-insert into locations (name, detail, event_id) values ('会場A', '会場Aですよー', '0kzrV'), ('会場B', '会場Bですよー', '0kzrV'),  ('トイレ', 'トイレですよー', '0kzrV'),  ('受付', '受付ですよー', '0kzrV'),  ('出入り口', '帰るよ', '0kzrV');
