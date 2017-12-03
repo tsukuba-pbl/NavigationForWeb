@@ -61,7 +61,7 @@ services:
     expose:
       - "3306"
     volumes:
-      - ./mysql/my.conf:/etc/mysql/my.conf
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
       - ./mysql/log:/var/log/mysql
     container_name: mysql-db
     volumes_from:
