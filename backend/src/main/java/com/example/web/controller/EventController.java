@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.web.entity.EventEntity;
 import com.example.web.entity.LocationEntity;
+import com.example.web.entity.RegistBeaconEntity;
 import com.example.web.entity.ResponseEntity;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -48,6 +49,7 @@ public class EventController {
 		String sql = "select * from events";
 		logger.info("will fetch event list from databases");
 		List<EventEntity> eventList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventEntity.class));
+		
 		logger.info("have fetched event list from databases");
 
 		return ResponseEntity.builder()
@@ -201,6 +203,76 @@ public class EventController {
 		logger.info("have fetched locations from databases");
 		locationData.put("locations", list);
 		return locationData;
+    }
+    
+    
+    //Beacon登録API
+    @ResponseBody
+	@RequestMapping(value = "/{eventId}/beacons/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	public Object addBeacon(@RequestBody RegistBeaconEntity beacon, @PathVariable("eventId") String eventId) {
+		if (!eventId.equals(beacon.getEventId())) {
+			logger.error("Don't equal URL eventId and request eventId");
+			return ResponseEntity.builder()
+					.status(400)
+					.message("something wrong")
+					.data(null)
+					.build();
+		}
+
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		
+		//現在は固定値，今後固定値から可変値に変更するかどうかは未定
+		//DB登録用のUUIDで，この値はシステムでは使われない
+		String UUID = "00000000-0E91-1001-B000-001C4D4D633E";
+		beacon.setUuid(UUID);
+
+		int count = jdbcTemplate.queryForObject("select count(id) from beacons where event_id = :event_id and minor_id = :minor_id",
+				new MapSqlParameterSource().addValue("event_id", eventId).addValue("minor_id", beacon.getMinorId()), Integer.class);
+		
+		if(count > 0) {
+			logger.error("Already added beacon.");
+			return ResponseEntity.builder()
+					.status(300)
+					.message("already added beacon")
+					.data(null)
+					.build();
+		}
+		
+		String sql = "insert into beacons (event_id, uuid, minor_id) values (:event_id, :uuid, :minor_id)";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("event_id", eventId)
+				.addValue("uuid", beacon.getUuid())
+				.addValue("minor_id", beacon.getMinorId());
+		int result =  jdbcTemplate.update(sql, param);
+		if (result != 1) {
+			logger.error("failed to insert beacon");
+			return ResponseEntity.builder()
+					.status(400)
+					.message("failed to insert beacon")
+					.data(null)
+					.build();
+		}
+
+		return ResponseEntity.builder()
+				.status(200)
+				.message("success to insert beacon")
+				.data(null)
+				.build();
+	}
+    
+    //利用するBeaconのMinorIdを取得するAPI
+    @ResponseBody
+   	@RequestMapping(value = "/{eventId}/beacons", method = RequestMethod.GET)
+    public Object getBeacon(@PathVariable("eventId") String eventId) {
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		String sql = "select minor_id from beacons where event_id = :eventId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
+		logger.info("will fetch beacons from databases");
+		List<Integer> beacons = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Integer.class));
+		Map<String, List<Integer>> response = new HashMap<>();
+		response.put("minorIdList", beacons);
+		logger.info("have fetched beacons from databases");
+		return response;
     }
  
 
