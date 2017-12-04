@@ -21,13 +21,15 @@ import { AppComponent } from './app.component'
 import { IndexComponent } from './index/index.component'
 import { EventRegistrationComponent } from './event-registration/event-registration.component'
 import { EventDetailComponent } from './event-detail/event-detail.component'
-import { LocationRegistrationComponent } from './location-registration/location-registration.component'
+import { LocationRegistrationComponent } from './location-registration/location-registration.component';
+import { BeaconRegistrationComponent } from './beacon-registration/beacon-registration.component'
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'events/new',  component: EventRegistrationComponent },
   { path: 'events/:id', component: EventDetailComponent },
-  { path: 'events/:id/locations/new', component: LocationRegistrationComponent }
+  { path: 'events/:id/locations/new', component: LocationRegistrationComponent },
+  { path: 'events/:id/beacons/new', component: BeaconRegistrationComponent }
 ];
 
 @NgModule({
@@ -37,6 +39,7 @@ const routes: Routes = [
     IndexComponent,
     LocationRegistrationComponent,
     EventDetailComponent,
+    BeaconRegistrationComponent,
   ],
   imports: [
     BrowserModule,
