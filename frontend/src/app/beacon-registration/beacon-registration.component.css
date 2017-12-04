@@ -1,0 +1,35 @@
+.container {
+	display: flex;
+    flex-direction: column;
+}
+
+form > * {
+	width: 100%;
+}
+
+.message {
+    margin: 10px 0;
+    color: #d65d5d;
+    text-align: center;
+}
+
+.beacon {
+    display: flex;
+    justify-content: center;
+}
+
+.beacon-id {
+    width: 30%;
+    padding-right: 20px; 
+}
+
+/* スマホの場合の設定 */
+@media screen and (max-width: 480px) {
+    .beacon {
+        display: block;
+    }
+
+    .beacon-id {
+        width: 100%;
+    }
+}

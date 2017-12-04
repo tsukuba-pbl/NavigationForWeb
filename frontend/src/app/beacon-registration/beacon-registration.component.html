@@ -1,3 +1,33 @@
-<p>
-  beacon-registration works!
-</p>
+<div class="hierarchy">
+  <a [routerLink]="['']">イベント一覧</a> / <a [routerLink]="['/events/', eventId]">イベント詳細</a> / ビーコンの設定
+</div>
+<div class="page">
+  <div class="container">
+    <h1>ビーコンの設定</h1>
+
+    <h2>登録されているビーコン一覧</h2>
+    <div>
+      <ul >
+        <li *ngFor="let beacon of beacons">
+          ビーコンID: {{beacon.minorId}}
+        </li>
+      </ul>
+    </div>
+
+    <h2>ビーコンの登録</h2>
+    <form [formGroup]="beaconForm" #f="ngForm" (ngSubmit)="onSubmit(beaconForm)">
+      <div class="beacon">
+        <mat-form-field class="beacon-id">
+          <input type="number" matInput placeholder="Beacon ID" [formControl]="beaconForm.controls['beaconId']">
+          <mat-error *ngIf="!locationForm.controls['beaconId'].valid">
+            Beacon ID is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <button type="submit" class="button" color="primary" mat-raised-button [disabled]="!beaconForm.valid">ビーコンの登録</button>
+      <div class="message">
+        {{resultText}}
+      </div>
+    </form>
+  </div>
+</div>
