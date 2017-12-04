@@ -45,7 +45,7 @@ public class EventController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
     public Object index() {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select * from events";
+		String sql = "select * from events order by start_date";
 		logger.info("will fetch event list from databases");
 		List<EventEntity> eventList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EventEntity.class));
 		logger.info("have fetched event list from databases");

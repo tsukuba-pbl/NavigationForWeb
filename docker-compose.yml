@@ -6,7 +6,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/conf.d/local:/etc/nginx/conf.d
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/logs:/var/log/nginx
     links:
@@ -61,7 +61,7 @@ services:
     expose:
       - "3306"
     volumes:
-      - ./mysql/my.conf:/etc/mysql/my.conf
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
       - ./mysql/log:/var/log/mysql
     container_name: mysql-db
     volumes_from:
