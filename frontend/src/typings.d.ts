@@ -31,5 +31,5 @@ type ResponseData = {
 
 type BeaconType = {
   eventid: string,
-  minorid: JSON;
+  minorid: number;
 }
