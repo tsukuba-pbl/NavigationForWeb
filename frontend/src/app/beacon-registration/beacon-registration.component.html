@@ -19,7 +19,7 @@
       <div class="beacon">
         <mat-form-field class="beacon-id">
           <input type="number" matInput placeholder="Beacon ID" [formControl]="beaconForm.controls['beaconId']">
-          <mat-error *ngIf="!locationForm.controls['beaconId'].valid">
+          <mat-error *ngIf="!beaconForm.controls['beaconId'].valid">
             Beacon ID is <strong>required</strong>
           </mat-error>
         </mat-form-field>

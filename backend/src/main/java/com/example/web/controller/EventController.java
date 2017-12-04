@@ -210,8 +210,10 @@ public class EventController {
     @ResponseBody
 	@RequestMapping(value = "/{eventId}/beacons/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public Object addBeacon(@RequestBody RegistBeaconEntity beacon, @PathVariable("eventId") String eventId) {
+    	logger.error(beacon.getEventId());
 		if (!eventId.equals(beacon.getEventId())) {
 			logger.error("Don't equal URL eventId and request eventId");
+			logger.error(eventId);
 			return ResponseEntity.builder()
 					.status(400)
 					.message("something wrong")
