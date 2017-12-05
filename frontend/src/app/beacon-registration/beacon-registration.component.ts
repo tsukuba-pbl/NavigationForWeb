@@ -29,7 +29,6 @@ export class BeaconRegistrationComponent implements OnInit {
       this.eventId = params["id"]
       this.beaconService.getBeacons(this.eventId)
       .subscribe(result => {
-        console.log(result)
         this.minorIdList = result.minorIdList
       })
     })

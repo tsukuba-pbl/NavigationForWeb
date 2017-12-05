@@ -211,10 +211,8 @@ public class EventController {
     @ResponseBody
 	@RequestMapping(value = "/{eventId}/beacons/new", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	public Object addBeacon(@RequestBody RegistBeaconEntity beacon, @PathVariable("eventId") String eventId) {
-    	logger.error(beacon.getEventId());
 		if (!eventId.equals(beacon.getEventId())) {
 			logger.error("Don't equal URL eventId and request eventId");
-			logger.error(eventId);
 			return ResponseEntity.builder()
 					.status(400)
 					.message("something wrong")
@@ -231,7 +229,6 @@ public class EventController {
 
 		int count = jdbcTemplate.queryForObject("select count(id) from beacons where event_id = :event_id and minor_id = :minor_id",
 				new MapSqlParameterSource().addValue("event_id", eventId).addValue("minor_id", beacon.getMinorId()), Integer.class);
-		logger.error("minorId:" + beacon.getMinorId());
 		if(count > 0) {
 			logger.error("Already added beacon.");
 			return ResponseEntity.builder()
@@ -279,10 +276,7 @@ public class EventController {
 			beacons.add(data.getMinorId());
 		});
 		response.put("minorIdList", beacons);
-		logger.error("response:" + response);
 		logger.info("have fetched beacons from databases");
 		return response;
     }
- 
-
 }
