@@ -1,2 +1,4 @@
 logs/*/*.log
 logs/*.log
+conf.d/prod/fullchain.pem
+conf.d/prod/privkey.pem
