@@ -230,7 +230,7 @@ public class EventController {
 
 		int count = jdbcTemplate.queryForObject("select count(id) from beacons where event_id = :event_id and minor_id = :minor_id",
 				new MapSqlParameterSource().addValue("event_id", eventId).addValue("minor_id", beacon.getMinorId()), Integer.class);
-		
+		logger.error("minorId:" + beacon.getMinorId());
 		if(count > 0) {
 			logger.error("Already added beacon.");
 			return ResponseEntity.builder()
@@ -271,9 +271,11 @@ public class EventController {
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
 		logger.info("will fetch beacons from databases");
 		List<Integer> beacons = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Integer.class));
+		logger.error("beacons:" + beacons);
 		Map<String, List<Integer>> response = new HashMap<>();
 		response.put("minorIdList", beacons);
 		logger.info("have fetched beacons from databases");
+		logger.error("response:" + response);
 		return response;
     }
  

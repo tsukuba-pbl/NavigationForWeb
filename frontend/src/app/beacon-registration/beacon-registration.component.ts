@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { BeaconService } from '../beacon.service'
 
 @Component({
-  selector: 'app-beacon-registration',
+  selector: 'app-beacon',
   templateUrl: './beacon-registration.component.html',
   styleUrls: ['./beacon-registration.component.css'],
   providers: [BeaconService]
@@ -40,9 +40,10 @@ export class BeaconRegistrationComponent implements OnInit {
     const requestParam = formGroup.value
 
     let requestBody: BeaconType = {
-      eventid: this.eventId,
-      minorid: requestParam.minorid,
+      eventId: this.eventId,
+      minorId: requestParam.beaconId,
     }
+
     this.beaconService.createBeacon(this.eventId, requestBody)
     .subscribe(result => {
       switch(result.status) {
