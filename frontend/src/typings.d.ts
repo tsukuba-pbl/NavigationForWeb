@@ -32,5 +32,4 @@ type ResponseData = {
 type BeaconType = {
   eventId: string,
   minorId: number,
-  minorIdList: any
 }

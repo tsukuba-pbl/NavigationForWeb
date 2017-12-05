@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -267,15 +268,19 @@ public class EventController {
    	@RequestMapping(value = "/{eventId}/beacons", method = RequestMethod.GET)
     public Object getBeacon(@PathVariable("eventId") String eventId) {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		String sql = "select minor_id from beacons where event_id = :eventId";
+		String sql = "select * from beacons where event_id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
 		logger.info("will fetch beacons from databases");
-		List<Integer> beacons = jdbcTemplate.query(sql, param, new BeanPropertyRowMapper<>(Integer.class));
-		logger.error("beacons:" + beacons);
-		Map<String, List<Integer>> response = new HashMap<>();
+		RowMapper<RegistBeaconEntity> mapper = new BeanPropertyRowMapper<RegistBeaconEntity>(RegistBeaconEntity.class);
+		List<RegistBeaconEntity> listData = jdbcTemplate.query(sql, param, mapper);
+		HashMap<String, Object> response = new HashMap<>();
+		List<Integer> beacons = new ArrayList<>();
+		listData.forEach(data -> {
+			beacons.add(data.getMinorId());
+		});
 		response.put("minorIdList", beacons);
-		logger.info("have fetched beacons from databases");
 		logger.error("response:" + response);
+		logger.info("have fetched beacons from databases");
 		return response;
     }
  

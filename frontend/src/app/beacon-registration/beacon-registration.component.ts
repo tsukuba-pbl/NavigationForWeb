@@ -17,6 +17,7 @@ export class BeaconRegistrationComponent implements OnInit {
   eventId: string = ""
   resultText: string = ""
   beacons: BeaconType[] = []
+  minorIdList: number[] = []
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,7 +29,8 @@ export class BeaconRegistrationComponent implements OnInit {
       this.eventId = params["id"]
       this.beaconService.getBeacons(this.eventId)
       .subscribe(result => {
-        this.beacons = result["beacons"]
+        console.log(result)
+        this.minorIdList = result.minorIdList
       })
     })
   }
