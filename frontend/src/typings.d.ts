@@ -28,3 +28,8 @@ type ResponseData = {
   message: string,
   data: any
 }
+
+type BeaconType = {
+  eventId: string,
+  minorId: number,
+}
