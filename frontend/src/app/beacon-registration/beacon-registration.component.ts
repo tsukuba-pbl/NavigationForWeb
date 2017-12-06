@@ -53,7 +53,7 @@ export class BeaconRegistrationComponent implements OnInit {
           this.form.resetForm()
           this.beaconService.getBeacons(this.eventId)
           .subscribe(result => {
-            this.beacons = result["beacons"]
+            this.minorIdList = result.minorIdList
           })
           break;
         case 300:

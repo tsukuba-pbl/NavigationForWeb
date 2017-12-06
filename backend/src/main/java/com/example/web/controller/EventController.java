@@ -224,8 +224,8 @@ public class EventController {
 		
 		//現在は固定値，今後固定値から可変値に変更するかどうかは未定
 		//DB登録用のUUIDで，この値はシステムでは使われない
-		String UUID = "00000000-0E91-1001-B000-001C4D4D633E";
-		beacon.setUuid(UUID);
+		String uuid = "00000000-0E91-1001-B000-001C4D4D633E";
+		beacon.setUuid(uuid);
 
 		int count = jdbcTemplate.queryForObject("select count(id) from beacons where event_id = :event_id and minor_id = :minor_id",
 				new MapSqlParameterSource().addValue("event_id", eventId).addValue("minor_id", beacon.getMinorId()), Integer.class);
@@ -268,13 +268,13 @@ public class EventController {
 		String sql = "select * from beacons where event_id = :eventId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("eventId", eventId);
 		logger.info("will fetch beacons from databases");
-		RowMapper<RegistBeaconEntity> mapper = new BeanPropertyRowMapper<RegistBeaconEntity>(RegistBeaconEntity.class);
+		RowMapper<RegistBeaconEntity> mapper = new BeanPropertyRowMapper<>(RegistBeaconEntity.class);
 		List<RegistBeaconEntity> listData = jdbcTemplate.query(sql, param, mapper);
 		HashMap<String, Object> response = new HashMap<>();
 		List<Integer> beacons = new ArrayList<>();
-		listData.forEach(data -> {
-			beacons.add(data.getMinorId());
-		});
+		listData.forEach(data ->
+			beacons.add(data.getMinorId())
+		);
 		response.put("minorIdList", beacons);
 		logger.info("have fetched beacons from databases");
 		return response;
