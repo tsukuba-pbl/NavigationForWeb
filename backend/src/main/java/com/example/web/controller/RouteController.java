@@ -70,7 +70,7 @@ public class RouteController {
     			logger.info("return redis value");
     			return ResponseEntity.builder()
 					.status(200)
-					.message("success to fetch navigation")
+					.message("success to fetch navigation from redis")
 					.data(redisTemplate.opsForValue().get(redisKey))
 					.build();
     		}
