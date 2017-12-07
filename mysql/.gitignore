@@ -1,4 +1,3 @@
 data/*
 !data/.gitkeep
-log/
-!log/.gitkeep
+log/*.log

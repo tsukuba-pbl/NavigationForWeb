@@ -2,8 +2,7 @@ target/
 !target/.gitkeep
 
 !.mvn/wrapper/maven-wrapper.jar
-logs/
-!logs/.gitkeep
+logs/*.log
 
 ### STS ###
 .apt_generated
