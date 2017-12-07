@@ -169,7 +169,7 @@ public class RouteController {
 		
 		List<Object> detailsList = new ArrayList<>();
 		Map<String, Object> detailsEntity = new HashMap<>();
-		detailsEntity.put("isReverse", isReverse);
+		detailsEntity.put("isReverse", isReverse ? 1 : 0);
 		detailsList.add(detailsEntity);
 		response.put("details", detailsList);
 		
