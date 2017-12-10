@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.web.entity.EventEntity;
 
 import mypack.parse.navigationdata.*;
 
@@ -132,7 +133,7 @@ public class RouteController {
 		List<Object> list = new ArrayList<>();
 		for(int i = 0; i < navigation.size(); i++) {
 			NavigationEntity data = navigation.get(i);
-			Map<String, Object> entity = new HashMap<>();
+			Map<String, Object> entity = new HashMap<String, Object>();
 			entity.put("areaId", i + 1);
 			//反転ルートの処理を行う
 			//なお，StartとGoalに対しては反転処理を行わない
