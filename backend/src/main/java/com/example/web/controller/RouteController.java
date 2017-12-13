@@ -167,6 +167,12 @@ public class RouteController {
 		Map<String, List<Object>> response = new HashMap<>();
 		response.put("routes", list);
 		
+		List<Object> detailsList = new ArrayList<>();
+		Map<String, Object> detailsEntity = new HashMap<>();
+		detailsEntity.put("isReverse", isReverse ? 1 : 0);
+		detailsList.add(detailsEntity);
+		response.put("details", detailsList);
+		
 		redisTemplate.opsForValue().set(redisKey, response);
 		logger.info("set value in redis");
 		
