@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
@@ -174,6 +175,7 @@ public class RouteController {
 		response.put("details", detailsList);
 		
 		redisTemplate.opsForValue().set(redisKey, response);
+		redisTemplate.expire(redisKey, 1, TimeUnit.DAYS);
 		logger.info("set value in redis");
 		
     		return ResponseEntity.builder()
