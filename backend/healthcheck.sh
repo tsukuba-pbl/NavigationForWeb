@@ -3,13 +3,11 @@
 set -e
 
 host="$1"
-shift
-cmd="$@"
+port="$2"
 
-until nc -vz "$host" 3306; do
+until nc -vz $host $port; do
   >&2 echo "MySQL is unavailable - sleeping"
   sleep 1
 done
 
 >&2 echo "MySQL is up - executing command"
-exec $cmd
