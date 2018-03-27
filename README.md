@@ -103,7 +103,7 @@ docker exec springdocker_app_1 ./mvnw flyway:clean -Dflyway.configFile=./src/mai
 - prod環境
 
     `/src/main/resources/prod/db/migration` にテストデータを挿入するマイグレーションファイルを入れることでマイグレーション時に実行してくれる．
-## application.properties
+## application.properties(環境変数のファイル)
 `/src/main/resources/`以下に各環境ごとにフォルダ分けされている．
 
 - local環境
